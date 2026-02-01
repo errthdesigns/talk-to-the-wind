@@ -913,22 +913,49 @@ export default function TalkToTheWind() {
       }
     };
 
-    // Mouse interaction
+    // Mouse/touch interaction
     const mouse = new THREE.Vector2();
     const mouse3D = new THREE.Vector3();
     const raycaster = new THREE.Raycaster();
     let isMouseDown = false;
 
-    const onMouseMove = (e) => {
-      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    const updatePointerPosition = (clientX, clientY) => {
+      mouse.x = (clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(clientY / window.innerHeight) * 2 + 1;
       raycaster.setFromCamera(mouse, camera);
       raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), mouse3D);
+    };
+
+    const onMouseMove = (e) => {
+      updatePointerPosition(e.clientX, e.clientY);
+    };
+
+    const onTouchStart = (e) => {
+      if (e.touches.length > 0) {
+        isMouseDown = true;
+        updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (e.touches.length > 0) {
+        updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const onTouchEnd = () => {
+      isMouseDown = false;
     };
 
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mousedown', () => isMouseDown = true);
     window.addEventListener('mouseup', () => isMouseDown = false);
+    
+    // Touch events for mobile
+    renderer.domElement.addEventListener('touchstart', onTouchStart, { passive: true });
+    renderer.domElement.addEventListener('touchmove', onTouchMove, { passive: true });
+    renderer.domElement.addEventListener('touchend', onTouchEnd, { passive: true });
+    renderer.domElement.addEventListener('touchcancel', onTouchEnd, { passive: true });
 
     let cameraAngle = 0;
     let time = 0;
@@ -1149,6 +1176,10 @@ export default function TalkToTheWind() {
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', onResize);
+      renderer.domElement.removeEventListener('touchstart', onTouchStart);
+      renderer.domElement.removeEventListener('touchmove', onTouchMove);
+      renderer.domElement.removeEventListener('touchend', onTouchEnd);
+      renderer.domElement.removeEventListener('touchcancel', onTouchEnd);
       if (containerRef.current) {
         containerRef.current.removeChild(renderer.domElement);
       }
