@@ -282,7 +282,9 @@ export default function TalkToTheWind() {
   const stateRef = useRef({
     motionPreset: 'drift',
     intensity: 0.5,
-    turbulence: 0,
+    turbulence: 0.45,
+    velocity: 0.8,
+    resonance: 0.12,
     gustDirection: 0,
     breathePhase: 0,
     shimmerTime: 0,
@@ -1001,24 +1003,42 @@ export default function TalkToTheWind() {
           state.isTransitioning = false;
         }
       } else {
-        // Motion presets
+        // Motion presets with slider controls
+        const turb = state.turbulence; // 0-1, adds chaos/randomness
+        const vel = state.velocity;    // 0-1, affects speed
+        const res = state.resonance;   // 0-1, affects oscillation/bounce
+        
         for (let i = 0; i < PARTICLE_COUNT; i++) {
           const ix = i * 3, iy = i * 3 + 1, iz = i * 3 + 2;
-          const intensity = state.intensity;
           
-          // Apply motion based on preset
+          // Turbulence - random movement based on TUR slider
+          if (turb > 0.01) {
+            velocities[ix] += (Math.random() - 0.5) * turb * 0.4;
+            velocities[iy] += (Math.random() - 0.5) * turb * 0.4;
+            velocities[iz] += (Math.random() - 0.5) * turb * 0.4;
+          }
+          
+          // Resonance - wave/oscillation effect based on RES slider
+          if (res > 0.01) {
+            const resWave = Math.sin(time * (1 + res * 3) + i * 0.01) * res * 0.15;
+            velocities[iy] += resWave;
+            velocities[ix] += Math.cos(time * res * 2 + i * 0.005) * res * 0.05;
+          }
+          
+          // Apply motion based on preset (scaled by velocity)
+          const motionScale = 0.3 + vel * 1.5;
           switch (state.motionPreset) {
             case 'swirl':
               const swirlAngle = Math.atan2(posArray[iz], posArray[ix]);
-              velocities[ix] += Math.cos(swirlAngle + Math.PI / 2) * 0.1 * intensity;
-              velocities[iz] += Math.sin(swirlAngle + Math.PI / 2) * 0.1 * intensity;
+              velocities[ix] += Math.cos(swirlAngle + Math.PI / 2) * 0.1 * motionScale;
+              velocities[iz] += Math.sin(swirlAngle + Math.PI / 2) * 0.1 * motionScale;
               break;
             case 'gust':
-              velocities[ix] += Math.cos(state.gustDirection) * 0.15 * intensity;
-              velocities[iz] += Math.sin(state.gustDirection) * 0.05 * intensity;
+              velocities[ix] += Math.cos(state.gustDirection) * 0.15 * motionScale;
+              velocities[iz] += Math.sin(state.gustDirection) * 0.05 * motionScale;
               break;
             case 'breathe':
-              const breathe = Math.sin(time * 0.8) * 0.02 * intensity;
+              const breathe = Math.sin(time * (0.5 + vel)) * 0.03 * motionScale;
               const dist = Math.sqrt(posArray[ix] ** 2 + posArray[iy] ** 2 + posArray[iz] ** 2);
               if (dist > 0) {
                 velocities[ix] += (posArray[ix] / dist) * breathe;
@@ -1027,33 +1047,34 @@ export default function TalkToTheWind() {
               }
               break;
             case 'tremble':
-              velocities[ix] += (Math.random() - 0.5) * 0.3 * intensity;
-              velocities[iy] += (Math.random() - 0.5) * 0.3 * intensity;
-              velocities[iz] += (Math.random() - 0.5) * 0.3 * intensity;
+              velocities[ix] += (Math.random() - 0.5) * 0.4 * motionScale;
+              velocities[iy] += (Math.random() - 0.5) * 0.4 * motionScale;
+              velocities[iz] += (Math.random() - 0.5) * 0.4 * motionScale;
               break;
             case 'pulse':
-              const pulse = Math.sin(time * 3) > 0.8 ? 0.5 : 0;
-              velocities[iy] += pulse * intensity * (Math.random() - 0.3);
+              const pulse = Math.sin(time * (2 + vel * 2)) > 0.7 ? 0.6 : 0;
+              velocities[iy] += pulse * motionScale * (Math.random() - 0.3);
               break;
             case 'orbit':
-              const orbitAngle = Math.atan2(posArray[iz], posArray[ix]) + 0.01 * intensity;
+              const orbitSpeed = 0.005 + vel * 0.02;
+              const orbitAngle = Math.atan2(posArray[iz], posArray[ix]) + orbitSpeed;
               const orbitDist = Math.sqrt(posArray[ix] ** 2 + posArray[iz] ** 2);
-              velocities[ix] += (Math.cos(orbitAngle) * orbitDist - posArray[ix]) * 0.01;
-              velocities[iz] += (Math.sin(orbitAngle) * orbitDist - posArray[iz]) * 0.01;
+              velocities[ix] += (Math.cos(orbitAngle) * orbitDist - posArray[ix]) * 0.015;
+              velocities[iz] += (Math.sin(orbitAngle) * orbitDist - posArray[iz]) * 0.015;
               break;
             default: // drift
-              velocities[iy] += Math.sin(time + i * 0.01) * 0.008 * intensity;
-              velocities[ix] += Math.cos(time * 0.5 + i * 0.005) * 0.003 * intensity;
+              velocities[iy] += Math.sin(time + i * 0.01) * 0.01 * motionScale;
+              velocities[ix] += Math.cos(time * 0.5 + i * 0.005) * 0.005 * motionScale;
           }
           
           // Shimmer effect
           if (state.isShimmering) {
-            const shimmer = Math.sin(state.shimmerTime + i * 0.1) * 0.15;
+            const shimmer = Math.sin(state.shimmerTime + i * 0.1) * 0.2;
             velocities[ix] += shimmer * (Math.random() - 0.5);
             velocities[iy] += shimmer * (Math.random() - 0.5);
           }
           
-          // Mouse interaction
+          // Mouse/touch interaction
           if (isMouseDown) {
             const dx = posArray[ix] - mouse3D.x;
             const dy = posArray[iy] - mouse3D.y;
@@ -1068,15 +1089,17 @@ export default function TalkToTheWind() {
             }
           }
           
-          // Return to target
-          velocities[ix] += (targetPositions[ix] - posArray[ix]) * 0.002;
-          velocities[iy] += (targetPositions[iy] - posArray[iy]) * 0.002;
-          velocities[iz] += (targetPositions[iz] - posArray[iz]) * 0.002;
+          // Return to target - stronger when velocity is low
+          const returnStrength = 0.001 + (1 - vel) * 0.003;
+          velocities[ix] += (targetPositions[ix] - posArray[ix]) * returnStrength;
+          velocities[iy] += (targetPositions[iy] - posArray[iy]) * returnStrength;
+          velocities[iz] += (targetPositions[iz] - posArray[iz]) * returnStrength;
           
-          // Damping
-          velocities[ix] *= 0.98;
-          velocities[iy] *= 0.98;
-          velocities[iz] *= 0.98;
+          // Damping - less damping with higher velocity
+          const damping = 0.96 + vel * 0.03;
+          velocities[ix] *= damping;
+          velocities[iy] *= damping;
+          velocities[iz] *= damping;
           
           posArray[ix] += velocities[ix];
           posArray[iy] += velocities[iy];
@@ -1237,64 +1260,109 @@ export default function TalkToTheWind() {
         </div>
 
         {/* Sliders */}
-        {[
-          { label: 'TUR', value: turbulence, setter: setTurbulence },
-          { label: 'VEL', value: velocity, setter: setVelocity },
-          { label: 'RES', value: resonance, setter: setResonance }
-        ].map(({ label, value, setter }) => (
-          <div key={label} style={{
-            display: 'grid',
-            gridTemplateColumns: '40px 40px 1fr',
-            height: '40px',
-            alignItems: 'center',
-            borderBottom: '1px solid #333'
-          }}>
-            <span style={{ paddingLeft: '12px', color: '#555', fontSize: '10px' }}>{label}</span>
-            <span style={{ textAlign: 'right', paddingRight: '8px' }}>{String(value).padStart(2, '0')}</span>
-            <div style={{ padding: '0 16px', position: 'relative' }}>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={value}
-                onChange={(e) => {
-                  setter(Number(e.target.value));
-                  stateRef.current.intensity = Number(e.target.value) / 100;
-                }}
-                style={{
-                  width: '100%',
-                  height: '12px',
-                  background: 'transparent',
-                  WebkitAppearance: 'none',
-                  cursor: 'pointer'
-                }}
-                className="synth-slider"
-              />
-            </div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '40px 40px 1fr',
+          height: '40px',
+          alignItems: 'center',
+          borderBottom: '1px solid #333'
+        }}>
+          <span style={{ paddingLeft: '12px', color: '#555', fontSize: '10px' }}>TUR</span>
+          <span style={{ textAlign: 'right', paddingRight: '8px' }}>{String(turbulence).padStart(2, '0')}</span>
+          <div style={{ padding: '0 16px', position: 'relative' }}>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={turbulence}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setTurbulence(val);
+                stateRef.current.turbulence = val / 100;
+              }}
+              style={{ width: '100%', height: '12px', background: 'transparent', WebkitAppearance: 'none', cursor: 'pointer' }}
+              className="synth-slider"
+            />
           </div>
-        ))}
+        </div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '40px 40px 1fr',
+          height: '40px',
+          alignItems: 'center',
+          borderBottom: '1px solid #333'
+        }}>
+          <span style={{ paddingLeft: '12px', color: '#555', fontSize: '10px' }}>VEL</span>
+          <span style={{ textAlign: 'right', paddingRight: '8px' }}>{String(velocity).padStart(2, '0')}</span>
+          <div style={{ padding: '0 16px', position: 'relative' }}>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={velocity}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setVelocity(val);
+                stateRef.current.velocity = val / 100;
+              }}
+              style={{ width: '100%', height: '12px', background: 'transparent', WebkitAppearance: 'none', cursor: 'pointer' }}
+              className="synth-slider"
+            />
+          </div>
+        </div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '40px 40px 1fr',
+          height: '40px',
+          alignItems: 'center',
+          borderBottom: '1px solid #333'
+        }}>
+          <span style={{ paddingLeft: '12px', color: '#555', fontSize: '10px' }}>RES</span>
+          <span style={{ textAlign: 'right', paddingRight: '8px' }}>{String(resonance).padStart(2, '0')}</span>
+          <div style={{ padding: '0 16px', position: 'relative' }}>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={resonance}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setResonance(val);
+                stateRef.current.resonance = val / 100;
+              }}
+              style={{ width: '100%', height: '12px', background: 'transparent', WebkitAppearance: 'none', cursor: 'pointer' }}
+              className="synth-slider"
+            />
+          </div>
+        </div>
       </section>
 
       {/* Input area */}
-      <div style={{
-        minHeight: '50px',
-        display: 'grid',
-        gridTemplateColumns: '1fr 60px',
-        borderTop: '1px solid #333',
-        flexShrink: 0,
-        paddingBottom: 'env(safe-area-inset-bottom, 0px)'
-      }}>
+      <form 
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+        style={{
+          minHeight: '50px',
+          display: 'grid',
+          gridTemplateColumns: '1fr 60px',
+          borderTop: '1px solid #333',
+          flexShrink: 0,
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)'
+        }}
+      >
         <input
           type="text"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
           placeholder="> TYPE TO SPEAK..."
           disabled={isProcessing}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
+          enterKeyHint="send"
           style={{
             background: isProcessing ? 'rgba(255,255,255,0.02)' : 'transparent',
             border: 'none',
@@ -1311,7 +1379,7 @@ export default function TalkToTheWind() {
           }}
         />
         <button
-          onClick={handleSubmit}
+          type="submit"
           disabled={isProcessing}
           style={{
             display: 'flex',
@@ -1321,14 +1389,16 @@ export default function TalkToTheWind() {
             border: 'none',
             color: isProcessing ? '#555' : '#e0e0e0',
             fontFamily: '"Space Mono", "Courier New", monospace',
-            fontSize: '12px',
+            fontSize: '16px',
             cursor: isProcessing ? 'default' : 'pointer',
-            transition: 'color 0.2s'
+            transition: 'color 0.2s',
+            WebkitTapHighlightColor: 'transparent',
+            touchAction: 'manipulation'
           }}
         >
           [TX]
         </button>
-      </div>
+      </form>
 
       <style>{`
         @keyframes fadeIn {
