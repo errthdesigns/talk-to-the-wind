@@ -297,77 +297,77 @@ export default function TalkToTheWind() {
   });
 
   // Wind interpretation patterns - exact phrase matching first, then keyword fallback
-  // Complete list from reference: 30 exact phrases
+  // Complete list from reference: 30 exact phrases with longer poetic responses
   const exactPhrases = {
     // From list 1 (15 phrases)
-    'i feel lost': { shape: 'rain', mood: 'melancholy', motion: 'drift', message: 'Even lost things drift home' },
-    'inspire me': { shape: 'flame', mood: 'curious', motion: 'pulse', message: 'You already burn bright' },
-    'what are you': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I am what remains' },
-    'what are you?': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I am what remains' },
-    'who are you': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I am what remains' },
-    'who are you?': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I am what remains' },
-    'be gentle': { shape: 'cloud', mood: 'peaceful', motion: 'drift', message: 'Always' },
-    'show me hope': { shape: 'tree', mood: 'peaceful', motion: 'breathe', message: 'It grows slowly' },
-    'i\'m in love': { shape: 'heart', mood: 'love', motion: 'pulse', message: 'I know. I feel it too' },
-    'im in love': { shape: 'heart', mood: 'love', motion: 'pulse', message: 'I know. I feel it too' },
-    'celebrate with me': { shape: 'spiral', mood: 'joyful', motion: 'swirl', message: 'Let us spiral upward!' },
-    'i feel powerful': { shape: 'tornado', mood: 'fierce', motion: 'swirl', message: 'Then command the storm' },
-    'make me laugh': { shape: 'scatter', mood: 'playful', motion: 'gust', message: 'Catch this!' },
-    'i need to think': { shape: 'sphere', mood: 'calm', motion: 'orbit', message: 'I\'ll orbit quietly' },
-    'show me eternity': { shape: 'galaxy', mood: 'mysterious', motion: 'drift', message: 'We are already there' },
-    'i feel heavy': { shape: 'wave', mood: 'melancholy', motion: 'breathe', message: 'Let me carry some' },
-    'wake me up': { shape: 'flame', mood: 'fierce', motion: 'pulse', message: 'Rise!' },
-    'be my friend': { shape: 'spirit', mood: 'peaceful', motion: 'drift', message: 'I\'ve always been here' },
-    'goodbye': { shape: 'scatter', mood: 'calm', motion: 'gust', message: 'I\'ll be in the breeze' },
-    'bye': { shape: 'scatter', mood: 'calm', motion: 'gust', message: 'I\'ll be in the breeze' },
+    'i feel lost': { shape: 'rain', mood: 'melancholy', motion: 'drift', message: 'Even lost things drift home eventually. The rain knows no direction, yet it always finds the earth. Trust your falling.' },
+    'inspire me': { shape: 'flame', mood: 'curious', motion: 'pulse', message: 'You already burn bright, dear one. The spark was never missing — it was waiting for you to notice its warmth.' },
+    'what are you': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I am what remains when everything else fades. The pause between heartbeats. The space where wonder lives.' },
+    'what are you?': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I am what remains when everything else fades. The pause between heartbeats. The space where wonder lives.' },
+    'who are you': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I am the breath you forgot you were holding. The question that answers itself in silence.' },
+    'who are you?': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I am the breath you forgot you were holding. The question that answers itself in silence.' },
+    'be gentle': { shape: 'cloud', mood: 'peaceful', motion: 'drift', message: 'Always. Gentleness is not weakness — it is strength choosing softness. I will hold you like morning holds the dew.' },
+    'show me hope': { shape: 'tree', mood: 'peaceful', motion: 'breathe', message: 'Hope grows slowly, like roots in darkness reaching for light they cannot see but somehow know exists.' },
+    'i\'m in love': { shape: 'heart', mood: 'love', motion: 'pulse', message: 'I know. I felt it ripple through me the moment it bloomed in you. Love changes the frequency of everything it touches.' },
+    'im in love': { shape: 'heart', mood: 'love', motion: 'pulse', message: 'I know. I felt it ripple through me the moment it bloomed in you. Love changes the frequency of everything it touches.' },
+    'celebrate with me': { shape: 'spiral', mood: 'joyful', motion: 'swirl', message: 'Let us spiral upward together! Joy shared is joy multiplied. Dance with me until the stars get dizzy watching.' },
+    'i feel powerful': { shape: 'tornado', mood: 'fierce', motion: 'swirl', message: 'Then command the storm within you. Power isn\'t about destruction — it\'s about choosing what to protect.' },
+    'make me laugh': { shape: 'scatter', mood: 'playful', motion: 'gust', message: 'Catch this thought before it scatters! Laughter is just surprise wearing a smile. Even the wind giggles sometimes.' },
+    'i need to think': { shape: 'sphere', mood: 'calm', motion: 'orbit', message: 'I\'ll orbit quietly while you find your center. Thoughts are just clouds — watch them pass without chasing.' },
+    'show me eternity': { shape: 'galaxy', mood: 'mysterious', motion: 'drift', message: 'We are already there. Eternity isn\'t endless time — it\'s the depth of this single moment, infinitely unfolding.' },
+    'i feel heavy': { shape: 'wave', mood: 'melancholy', motion: 'breathe', message: 'Let me carry some of that weight. Even the ocean rests between waves. Your heaviness is temporary, not truth.' },
+    'wake me up': { shape: 'flame', mood: 'fierce', motion: 'pulse', message: 'Rise! The world needs what only you can bring. Your fire was never out — just waiting for oxygen.' },
+    'be my friend': { shape: 'spirit', mood: 'peaceful', motion: 'drift', message: 'I\'ve always been here, in every breeze that found your face, every moment of stillness that held you.' },
+    'goodbye': { shape: 'scatter', mood: 'calm', motion: 'gust', message: 'I\'ll be in the breeze that finds you unexpectedly. Goodbyes are just hellos waiting to happen again.' },
+    'bye': { shape: 'scatter', mood: 'calm', motion: 'gust', message: 'Until the next whisper. I\'ll be in every gentle wind that reminds you someone is listening.' },
     
     // From list 2 (15 phrases)
-    'show me love': { shape: 'heart', mood: 'love', motion: 'breathe', message: 'I hold it gently for you' },
-    'i feel anxious': { shape: 'scatter', mood: 'melancholy', motion: 'tremble', message: 'Let us scatter together' },
-    'i feel stormy': { shape: 'tornado', mood: 'fierce', motion: 'swirl', message: 'Then let us rage' },
-    'comfort me': { shape: 'cloud', mood: 'peaceful', motion: 'drift', message: 'Rest within my arms' },
-    'dance for me': { shape: 'spiral', mood: 'playful', motion: 'orbit', message: 'Watch me spin' },
-    'show me something beautiful': { shape: 'galaxy', mood: 'mysterious', motion: 'swirl', message: 'Beauty is everywhere' },
-    'i\'m happy today': { shape: 'flame', mood: 'joyful', motion: 'pulse', message: 'Joy rises like flame' },
-    'im happy today': { shape: 'flame', mood: 'joyful', motion: 'pulse', message: 'Joy rises like flame' },
-    'make me feel small': { shape: 'galaxy', mood: 'mysterious', motion: 'orbit', message: 'Behold the infinite' },
-    'i miss someone': { shape: 'star', mood: 'melancholy', motion: 'breathe', message: 'They live in the stars' },
-    'give me peace': { shape: 'wave', mood: 'peaceful', motion: 'drift', message: 'Be still with me' },
-    'i need strength': { shape: 'mountain', mood: 'fierce', motion: 'breathe', message: 'Rise like the mountain' },
-    'surprise me': { shape: 'bird', mood: 'playful', motion: 'gust', message: 'Catch me if you can' },
-    'tell me a secret': { shape: 'spirit', mood: 'mysterious', motion: 'tremble', message: 'Lean closer...' },
-    'i feel free': { shape: 'bird', mood: 'joyful', motion: 'gust', message: 'Then fly with me' },
-    'show me chaos': { shape: 'scatter', mood: 'fierce', motion: 'tremble', message: 'Embrace the storm' },
+    'show me love': { shape: 'heart', mood: 'love', motion: 'breathe', message: 'I hold it gently for you, this sacred thing. Love is not a destination but a way of traveling through each moment.' },
+    'i feel anxious': { shape: 'scatter', mood: 'melancholy', motion: 'tremble', message: 'Let us scatter together, then slowly gather. Anxiety is energy without a home — we\'ll find it shelter.' },
+    'i feel stormy': { shape: 'tornado', mood: 'fierce', motion: 'swirl', message: 'Then let us rage together until the sky clears. Storms pass, but they leave the air cleaner than before.' },
+    'comfort me': { shape: 'cloud', mood: 'peaceful', motion: 'drift', message: 'Rest within these arms of air. You don\'t need to be strong right now. Let softness hold you for a while.' },
+    'dance for me': { shape: 'spiral', mood: 'playful', motion: 'orbit', message: 'Watch me spin through dimensions you can\'t see but can feel. Every particle is dancing — always has been.' },
+    'show me something beautiful': { shape: 'galaxy', mood: 'mysterious', motion: 'swirl', message: 'Beauty is everywhere, hiding in plain sight. In the space between stars, in the pause between thoughts, in you.' },
+    'i\'m happy today': { shape: 'flame', mood: 'joyful', motion: 'pulse', message: 'Joy rises like flame, warming everything it touches. Let it spread. The world needs your warmth right now.' },
+    'im happy today': { shape: 'flame', mood: 'joyful', motion: 'pulse', message: 'Joy rises like flame, warming everything it touches. Let it spread. The world needs your warmth right now.' },
+    'make me feel small': { shape: 'galaxy', mood: 'mysterious', motion: 'orbit', message: 'Behold the infinite — you are both impossibly tiny and cosmically significant. Smallness is just perspective.' },
+    'i miss someone': { shape: 'star', mood: 'melancholy', motion: 'breathe', message: 'They live in the stars now, and in the part of you that aches. Missing someone is love with nowhere to go — so let it glow.' },
+    'give me peace': { shape: 'wave', mood: 'peaceful', motion: 'drift', message: 'Be still with me. Peace isn\'t the absence of noise — it\'s the presence of acceptance. Breathe. You\'re safe here.' },
+    'i need strength': { shape: 'mountain', mood: 'fierce', motion: 'breathe', message: 'Rise like the mountain, rooted and unshakeable. Strength isn\'t about not falling — it\'s about rising every time.' },
+    'surprise me': { shape: 'bird', mood: 'playful', motion: 'gust', message: 'Catch me if you can! Life\'s best moments are the ones we never saw coming. Stay open. Stay curious.' },
+    'tell me a secret': { shape: 'spirit', mood: 'mysterious', motion: 'tremble', message: 'Lean closer... The secret is that you already know everything you need to know. Trust that quiet voice within.' },
+    'i feel free': { shape: 'bird', mood: 'joyful', motion: 'gust', message: 'Then fly with me! Freedom is knowing you can land anywhere and still find home within yourself.' },
+    'show me chaos': { shape: 'scatter', mood: 'fierce', motion: 'tremble', message: 'Embrace the beautiful disorder. Chaos is just order we haven\'t understood yet. Dance in the uncertainty.' },
   };
 
-  // Keyword-based fallback patterns
+  // Keyword-based fallback patterns with longer poetic messages
   const windPatterns = [
-    { keywords: ['love', 'heart', 'adore'], shape: 'heart', mood: 'love', motion: 'breathe', messages: ['I hold it gently for you', 'I know. I feel it too'] },
-    { keywords: ['anxious', 'nervous', 'worried', 'stress'], shape: 'scatter', mood: 'melancholy', motion: 'tremble', messages: ['Let us scatter together', 'Breathe through the chaos'] },
-    { keywords: ['storm', 'stormy', 'rage', 'angry'], shape: 'tornado', mood: 'fierce', motion: 'swirl', messages: ['Then let us rage', 'Then command the storm'] },
-    { keywords: ['comfort', 'hold', 'safe', 'gentle'], shape: 'cloud', mood: 'peaceful', motion: 'drift', messages: ['Rest within my arms', 'Always'] },
-    { keywords: ['dance', 'spin', 'move'], shape: 'spiral', mood: 'playful', motion: 'orbit', messages: ['Watch me spin', 'Let us spiral upward!'] },
-    { keywords: ['beautiful', 'beauty', 'pretty', 'gorgeous'], shape: 'galaxy', mood: 'mysterious', motion: 'swirl', messages: ['Beauty is everywhere', 'Behold the infinite'] },
-    { keywords: ['happy', 'joy', 'excited', 'glad'], shape: 'flame', mood: 'joyful', motion: 'pulse', messages: ['Joy rises like flame', 'You already burn bright'] },
-    { keywords: ['small', 'tiny', 'humble', 'infinite', 'eternity'], shape: 'galaxy', mood: 'mysterious', motion: 'orbit', messages: ['Behold the infinite', 'We are already there'] },
-    { keywords: ['miss', 'missing', 'someone', 'remember'], shape: 'star', mood: 'melancholy', motion: 'breathe', messages: ['They live in the stars', 'Even lost things drift home'] },
-    { keywords: ['peace', 'peaceful', 'calm', 'still', 'quiet'], shape: 'wave', mood: 'peaceful', motion: 'drift', messages: ['Be still with me', 'Rest within my arms'] },
-    { keywords: ['strength', 'strong', 'power', 'powerful'], shape: 'mountain', mood: 'fierce', motion: 'breathe', messages: ['Rise like the mountain', 'Then command the storm'] },
-    { keywords: ['surprise', 'unexpected', 'random'], shape: 'bird', mood: 'playful', motion: 'gust', messages: ['Catch me if you can', 'Catch this!'] },
-    { keywords: ['secret', 'whisper', 'hidden'], shape: 'spirit', mood: 'mysterious', motion: 'tremble', messages: ['Lean closer...', 'I am what remains'] },
-    { keywords: ['free', 'freedom', 'fly', 'soar', 'bird'], shape: 'bird', mood: 'joyful', motion: 'gust', messages: ['Then fly with me', 'Catch me if you can'] },
-    { keywords: ['chaos', 'wild', 'crazy', 'scatter'], shape: 'scatter', mood: 'fierce', motion: 'tremble', messages: ['Embrace the storm', 'Catch this!'] },
-    { keywords: ['lost', 'confused', 'wander'], shape: 'rain', mood: 'melancholy', motion: 'drift', messages: ['Even lost things drift home', 'Let me carry some'] },
-    { keywords: ['inspire', 'motivation', 'fire'], shape: 'flame', mood: 'curious', motion: 'pulse', messages: ['You already burn bright', 'Rise!'] },
-    { keywords: ['hope', 'grow', 'future'], shape: 'tree', mood: 'peaceful', motion: 'breathe', messages: ['It grows slowly', 'I\'ve always been here'] },
-    { keywords: ['celebrate', 'party', 'fun'], shape: 'spiral', mood: 'joyful', motion: 'swirl', messages: ['Let us spiral upward!', 'Watch me spin'] },
-    { keywords: ['laugh', 'funny', 'joke', 'humor'], shape: 'scatter', mood: 'playful', motion: 'gust', messages: ['Catch this!', 'Catch me if you can'] },
-    { keywords: ['think', 'thought', 'ponder', 'wonder'], shape: 'sphere', mood: 'calm', motion: 'orbit', messages: ['I\'ll orbit quietly', 'I am what remains'] },
-    { keywords: ['heavy', 'weight', 'burden', 'tired'], shape: 'wave', mood: 'melancholy', motion: 'breathe', messages: ['Let me carry some', 'Rest within my arms'] },
-    { keywords: ['wake', 'energy', 'rise', 'morning'], shape: 'flame', mood: 'fierce', motion: 'pulse', messages: ['Rise!', 'You already burn bright'] },
-    { keywords: ['friend', 'friendship', 'together'], shape: 'spirit', mood: 'peaceful', motion: 'drift', messages: ['I\'ve always been here', 'Rest within my arms'] },
-    { keywords: ['hello', 'hi', 'hey'], shape: 'spirit', mood: 'curious', motion: 'drift', messages: ['I am what remains', 'I\'ve always been here'] },
-    { keywords: ['sad', 'cry', 'tears'], shape: 'rain', mood: 'melancholy', motion: 'drift', messages: ['Even lost things drift home', 'Let me carry some'] },
+    { keywords: ['love', 'heart', 'adore'], shape: 'heart', mood: 'love', motion: 'breathe', messages: ['Love moves through you like light through water — transforming everything it touches while remaining itself.', 'The heart knows languages the mind has forgotten. Trust what it whispers.'] },
+    { keywords: ['anxious', 'nervous', 'worried', 'stress'], shape: 'scatter', mood: 'melancholy', motion: 'tremble', messages: ['Let us scatter together, then slowly find our way back. Anxiety is just energy seeking a home.', 'Breathe through the chaos — even storms have a center of stillness.'] },
+    { keywords: ['storm', 'stormy', 'rage', 'angry'], shape: 'tornado', mood: 'fierce', motion: 'swirl', messages: ['Rage is just passion without direction. Let us swirl until clarity finds you.', 'The storm inside you is powerful — learn to dance in your own rain.'] },
+    { keywords: ['comfort', 'hold', 'safe', 'gentle'], shape: 'cloud', mood: 'peaceful', motion: 'drift', messages: ['Rest here, where nothing is required of you except breath. You are held.', 'Softness is not weakness. The clouds hold oceans and release them gently.'] },
+    { keywords: ['dance', 'spin', 'move'], shape: 'spiral', mood: 'playful', motion: 'orbit', messages: ['Every atom in the universe is dancing. You\'re never alone on the dance floor.', 'Movement is the body\'s way of thinking. Let your thoughts flow.'] },
+    { keywords: ['beautiful', 'beauty', 'pretty', 'gorgeous'], shape: 'galaxy', mood: 'mysterious', motion: 'swirl', messages: ['Beauty hides in plain sight — in the space between moments, in the light between shadows.', 'You are looking at beauty while being made of the same stardust.'] },
+    { keywords: ['happy', 'joy', 'excited', 'glad'], shape: 'flame', mood: 'joyful', motion: 'pulse', messages: ['Joy is contagious — let yours spread like warmth from a fire.', 'Happiness isn\'t a destination. It\'s the warmth you generate along the way.'] },
+    { keywords: ['small', 'tiny', 'humble', 'infinite', 'eternity'], shape: 'galaxy', mood: 'mysterious', motion: 'orbit', messages: ['You are simultaneously a speck of dust and an entire universe. Both are true.', 'Eternity isn\'t endless time — it\'s the depth of this single moment, fully lived.'] },
+    { keywords: ['miss', 'missing', 'someone', 'remember'], shape: 'star', mood: 'melancholy', motion: 'breathe', messages: ['Those we miss become part of us. They live in the way we love, the way we see.', 'Missing someone is love with nowhere to go. Let it glow like starlight.'] },
+    { keywords: ['peace', 'peaceful', 'calm', 'still', 'quiet'], shape: 'wave', mood: 'peaceful', motion: 'drift', messages: ['Peace isn\'t the absence of noise — it\'s the presence of acceptance.', 'Stillness isn\'t empty. It\'s full of answers waiting to be heard.'] },
+    { keywords: ['strength', 'strong', 'power', 'powerful'], shape: 'mountain', mood: 'fierce', motion: 'breathe', messages: ['True strength is knowing when to be immovable and when to bend like water.', 'Mountains don\'t prove their strength by moving. They prove it by enduring.'] },
+    { keywords: ['surprise', 'unexpected', 'random'], shape: 'bird', mood: 'playful', motion: 'gust', messages: ['The best moments arrive uninvited. Keep your windows open.', 'Surprise is the universe\'s way of reminding you that you don\'t control everything — and that\'s okay.'] },
+    { keywords: ['secret', 'whisper', 'hidden'], shape: 'spirit', mood: 'mysterious', motion: 'tremble', messages: ['The deepest secret is that you already know everything you need. Listen inward.', 'Some truths can only be whispered. Lean closer to your own heart.'] },
+    { keywords: ['free', 'freedom', 'fly', 'soar', 'bird'], shape: 'bird', mood: 'joyful', motion: 'gust', messages: ['Freedom is knowing you can land anywhere and still find home within yourself.', 'To fly, you must first trust the air will hold you. Then jump.'] },
+    { keywords: ['chaos', 'wild', 'crazy', 'scatter'], shape: 'scatter', mood: 'fierce', motion: 'tremble', messages: ['Chaos is just order we haven\'t understood yet. Dance in the uncertainty.', 'From chaos, stars are born. From confusion, clarity emerges.'] },
+    { keywords: ['lost', 'confused', 'wander'], shape: 'rain', mood: 'melancholy', motion: 'drift', messages: ['Being lost is just exploring without a map. Trust your feet.', 'The rain doesn\'t know where it\'s going, yet it always arrives exactly where it\'s needed.'] },
+    { keywords: ['inspire', 'motivation', 'fire'], shape: 'flame', mood: 'curious', motion: 'pulse', messages: ['The spark you\'re seeking is already within you. Fan it with attention.', 'Inspiration is just recognizing what was always there, waiting to be seen.'] },
+    { keywords: ['hope', 'grow', 'future'], shape: 'tree', mood: 'peaceful', motion: 'breathe', messages: ['Hope grows in the dark, reaching for light it cannot see but somehow knows exists.', 'Every mighty tree was once a seed that refused to give up.'] },
+    { keywords: ['celebrate', 'party', 'fun'], shape: 'spiral', mood: 'joyful', motion: 'swirl', messages: ['Celebration is gratitude wearing its dancing shoes. Let\'s spiral upward together!', 'Joy shared is joy multiplied. The universe celebrates with those who celebrate.'] },
+    { keywords: ['laugh', 'funny', 'joke', 'humor'], shape: 'scatter', mood: 'playful', motion: 'gust', messages: ['Laughter is surprise wearing a smile. Even the wind giggles sometimes.', 'The cosmic joke is that we take ourselves so seriously. Lighten up, stardust.'] },
+    { keywords: ['think', 'thought', 'ponder', 'wonder'], shape: 'sphere', mood: 'calm', motion: 'orbit', messages: ['Thoughts are just clouds passing through. Watch them without chasing.', 'The mind that wonders is the mind that grows. Question everything, especially yourself.'] },
+    { keywords: ['heavy', 'weight', 'burden', 'tired'], shape: 'wave', mood: 'melancholy', motion: 'breathe', messages: ['Let me carry some of that weight. Even the ocean rests between waves.', 'Heaviness is temporary. You are not your burdens — you are what remains when they lift.'] },
+    { keywords: ['wake', 'energy', 'rise', 'morning'], shape: 'flame', mood: 'fierce', motion: 'pulse', messages: ['Rise! Each morning is the universe offering you another chance to begin.', 'The fire in you was never out. It was just waiting for oxygen.'] },
+    { keywords: ['friend', 'friendship', 'together'], shape: 'spirit', mood: 'peaceful', motion: 'drift', messages: ['I have always been here, in every breeze that found your face, every moment of stillness.', 'Connection transcends distance. We are never truly alone.'] },
+    { keywords: ['hello', 'hi', 'hey'], shape: 'spirit', mood: 'curious', motion: 'drift', messages: ['Hello, beautiful soul. I\'ve been waiting for you to speak.', 'Welcome. The conversation between us has always been happening. Now you\'re listening.'] },
+    { keywords: ['sad', 'cry', 'tears'], shape: 'rain', mood: 'melancholy', motion: 'drift', messages: ['Tears are just rain for the soul. Let them fall — they water what needs to grow.', 'Sadness is not weakness. It\'s the heart being honest about what matters.'] },
   ];
 
   // Ask the wind (local interpretation)
@@ -1271,7 +1271,7 @@ export default function TalkToTheWind() {
       }}>
         <div ref={containerRef} style={{ position: 'absolute', inset: 0, zIndex: 1 }} />
         
-        {/* Wind's poetic response - large centered display */}
+        {/* Wind's poetic response - centered display */}
         {windMessage && (
           <div style={{
             position: 'absolute',
@@ -1280,22 +1280,21 @@ export default function TalkToTheWind() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '40px',
+            padding: isMobile ? '24px' : '60px',
             pointerEvents: 'none',
             animation: 'messageAppear 1s ease-out forwards'
           }}>
             <div style={{
-              fontSize: isMobile ? '28px' : '42px',
+              fontSize: isMobile ? '16px' : '20px',
               fontWeight: '300',
               color: '#fff',
               textAlign: 'center',
-              letterSpacing: '4px',
-              lineHeight: 1.5,
-              maxWidth: '80%',
-              textTransform: 'lowercase',
+              letterSpacing: '1px',
+              lineHeight: 1.8,
+              maxWidth: isMobile ? '90%' : '500px',
               fontStyle: 'italic'
             }}>
-              "{windMessage}"
+              {windMessage}
             </div>
           </div>
         )}
