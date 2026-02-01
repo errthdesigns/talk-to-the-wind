@@ -1421,25 +1421,49 @@ export default function TalkToTheWind() {
         style={{
           minHeight: '50px',
           display: 'grid',
-          gridTemplateColumns: '1fr 60px',
+          gridTemplateColumns: '50px 1fr 60px',
           borderTop: '1px solid #333',
           flexShrink: 0,
           paddingBottom: 'env(safe-area-inset-bottom, 0px)'
         }}
       >
+        {/* Microphone button */}
+        <button
+          type="button"
+          onClick={toggleVoiceInput}
+          disabled={!voiceSupported || isProcessing}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: isListeningVoice ? 'rgba(255, 100, 100, 0.2)' : 'transparent',
+            border: 'none',
+            borderRight: '1px solid #333',
+            color: !voiceSupported ? '#333' : isListeningVoice ? '#ff6b6b' : '#e0e0e0',
+            fontFamily: '"Space Mono", "Courier New", monospace',
+            fontSize: '18px',
+            cursor: !voiceSupported || isProcessing ? 'default' : 'pointer',
+            transition: 'all 0.2s',
+            WebkitTapHighlightColor: 'transparent',
+            touchAction: 'manipulation',
+            animation: isListeningVoice ? 'pulse 1.5s infinite' : 'none'
+          }}
+        >
+          {isListeningVoice ? '●' : '◉'}
+        </button>
         <input
           type="text"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          placeholder="> TYPE TO SPEAK..."
-          disabled={isProcessing}
+          placeholder={isListeningVoice ? "> LISTENING..." : "> TYPE OR TAP MIC..."}
+          disabled={isProcessing || isListeningVoice}
           autoComplete="off"
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
           enterKeyHint="send"
           style={{
-            background: isProcessing ? 'rgba(255,255,255,0.02)' : 'transparent',
+            background: isProcessing ? 'rgba(255,255,255,0.02)' : isListeningVoice ? 'rgba(255, 100, 100, 0.05)' : 'transparent',
             border: 'none',
             borderRight: '1px solid #333',
             color: '#e0e0e0',
@@ -1455,17 +1479,17 @@ export default function TalkToTheWind() {
         />
         <button
           type="submit"
-          disabled={isProcessing}
+          disabled={isProcessing || isListeningVoice}
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             background: 'transparent',
             border: 'none',
-            color: isProcessing ? '#555' : '#e0e0e0',
+            color: isProcessing || isListeningVoice ? '#555' : '#e0e0e0',
             fontFamily: '"Space Mono", "Courier New", monospace',
             fontSize: '16px',
-            cursor: isProcessing ? 'default' : 'pointer',
+            cursor: isProcessing || isListeningVoice ? 'default' : 'pointer',
             transition: 'color 0.2s',
             WebkitTapHighlightColor: 'transparent',
             touchAction: 'manipulation'
@@ -1483,6 +1507,10 @@ export default function TalkToTheWind() {
         @keyframes messageAppear {
           0% { opacity: 0; transform: scale(0.9) translateY(20px); }
           100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
         }
         .synth-slider::-webkit-slider-runnable-track {
           width: 100%;
