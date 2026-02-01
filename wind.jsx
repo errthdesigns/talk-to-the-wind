@@ -291,7 +291,9 @@ export default function TalkToTheWind() {
     isShimmering: false,
     transitionProgress: 0,
     isTransitioning: false,
-    edgeBrightness: 0
+    edgeBrightness: 0,
+    messageShowing: false,
+    particleOpacity: 1.0
   });
 
   // Wind interpretation patterns - exact phrase matching first, then keyword fallback
@@ -435,6 +437,7 @@ export default function TalkToTheWind() {
     setCurrentShape(matched.shape);
     stateRef.current.motionPreset = matched.motion;
     stateRef.current.intensity = newIntensity;
+    stateRef.current.messageShowing = true;
     
     // Trigger the morph
     if (sceneRef.current && shapeGenerators[matched.shape]) {
@@ -446,6 +449,11 @@ export default function TalkToTheWind() {
       setWindState('idle');
       stateRef.current.isShimmering = false;
     }, 4000);
+    
+    // Start fading particles back before message clears
+    setTimeout(() => {
+      stateRef.current.messageShowing = false;
+    }, 6000);
     
     // Clear message after longer time
     setTimeout(() => {
@@ -714,7 +722,9 @@ export default function TalkToTheWind() {
         uTime: { value: 0 },
         uEdgeBrightness: { value: 0 },
         uPulseIntensity: { value: 0.3 },
-        uGlowStrength: { value: 1.5 }
+        uGlowStrength: { value: 1.5 },
+        uOpacity: { value: 1.0 },
+        uDisperse: { value: 0.0 }
       },
       vertexShader: `
         attribute float size;
@@ -756,6 +766,7 @@ export default function TalkToTheWind() {
         varying float vSize;
         varying float vPulse;
         uniform float uGlowStrength;
+        uniform float uOpacity;
         
         void main() {
           vec2 center = gl_PointCoord - vec2(0.5);
@@ -788,7 +799,7 @@ export default function TalkToTheWind() {
           // Edge brightness and pulse effects
           finalColor *= (1.0 + vEdge * 0.7 + vPulse * 0.15);
           
-          gl_FragColor = vec4(finalColor * depthFade, alpha * depthFade * 0.9);
+          gl_FragColor = vec4(finalColor * depthFade, alpha * depthFade * 0.9 * uOpacity);
         }
       `,
       transparent: true,
@@ -980,6 +991,11 @@ export default function TalkToTheWind() {
       const targetGlow = state.isShimmering ? 2.0 : 1.5;
       material.uniforms.uPulseIntensity.value += (targetPulse - material.uniforms.uPulseIntensity.value) * 0.03;
       material.uniforms.uGlowStrength.value += (targetGlow - material.uniforms.uGlowStrength.value) * 0.03;
+      
+      // Particle opacity for message display
+      const targetOpacity = state.messageShowing ? 0.15 : 1.0;
+      state.particleOpacity += (targetOpacity - state.particleOpacity) * 0.08;
+      material.uniforms.uOpacity.value = state.particleOpacity;
 
       // Shimmer effect during thinking
       if (state.isShimmering) {
@@ -1265,21 +1281,21 @@ export default function TalkToTheWind() {
             alignItems: 'center',
             justifyContent: 'center',
             padding: '40px',
-            pointerEvents: 'none'
+            pointerEvents: 'none',
+            animation: 'messageAppear 1s ease-out forwards'
           }}>
             <div style={{
-              fontSize: isMobile ? '24px' : '32px',
-              fontWeight: '400',
+              fontSize: isMobile ? '28px' : '42px',
+              fontWeight: '300',
               color: '#fff',
               textAlign: 'center',
-              textShadow: '0 0 40px rgba(100, 150, 255, 0.8), 0 0 80px rgba(100, 150, 255, 0.4)',
-              letterSpacing: '2px',
-              lineHeight: 1.4,
-              maxWidth: '600px',
-              animation: 'messageAppear 0.8s ease-out forwards',
-              textTransform: 'none'
+              letterSpacing: '4px',
+              lineHeight: 1.5,
+              maxWidth: '80%',
+              textTransform: 'lowercase',
+              fontStyle: 'italic'
             }}>
-              {windMessage}
+              "{windMessage}"
             </div>
           </div>
         )}
