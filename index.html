@@ -2,14 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <title>Talk to the Wind</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-      html, body, #root { width: 100%; height: 100%; overflow: hidden; }
+      html { height: 100%; height: -webkit-fill-available; }
+      body { 
+        min-height: 100%; 
+        min-height: -webkit-fill-available;
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        background: #000;
+      }
+      #root { 
+        width: 100%; 
+        height: 100dvh;
+        height: -webkit-fill-available;
+        overflow: hidden;
+      }
+      input, button, textarea {
+        font-size: 16px !important; /* Prevents iOS zoom on focus */
+      }
     </style>
   </head>
   <body>

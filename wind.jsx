@@ -1146,11 +1146,16 @@ export default function TalkToTheWind() {
       textTransform: 'uppercase',
       background: '#000',
       color: '#e0e0e0',
-      height: '100vh',
+      height: '100dvh',
+      minHeight: '-webkit-fill-available',
       width: '100vw',
-      display: 'grid',
-      gridTemplateRows: 'auto 1fr auto auto',
-      border: '1px solid #333'
+      display: 'flex',
+      flexDirection: 'column',
+      border: '1px solid #333',
+      overflow: 'hidden',
+      position: 'fixed',
+      top: 0,
+      left: 0
     }}>
       {/* Header */}
       <header style={{
@@ -1182,6 +1187,8 @@ export default function TalkToTheWind() {
       {/* Viewport with particles */}
       <main style={{
         position: 'relative',
+        flex: 1,
+        minHeight: 0,
         backgroundImage: 'linear-gradient(#222 1px, transparent 1px), linear-gradient(90deg, #222 1px, transparent 1px)',
         backgroundSize: '40px 40px',
         backgroundPosition: '-1px -1px',
@@ -1216,7 +1223,7 @@ export default function TalkToTheWind() {
       </main>
 
       {/* Controls */}
-      <section style={{ borderTop: '1px solid #333', background: '#000' }}>
+      <section style={{ borderTop: '1px solid #333', background: '#000', flexShrink: 0 }}>
         {/* Param group - shows current form and spirit */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderBottom: '1px solid #333' }}>
           <div style={{ padding: '8px 12px', borderRight: '1px solid #333', display: 'flex', justifyContent: 'space-between' }}>
@@ -1270,10 +1277,12 @@ export default function TalkToTheWind() {
 
       {/* Input area */}
       <div style={{
-        height: '50px',
+        minHeight: '50px',
         display: 'grid',
         gridTemplateColumns: '1fr 60px',
-        borderTop: '1px solid #333'
+        borderTop: '1px solid #333',
+        flexShrink: 0,
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)'
       }}>
         <input
           type="text"
@@ -1282,17 +1291,23 @@ export default function TalkToTheWind() {
           onKeyPress={(e) => e.key === 'Enter' && handleSubmit(e)}
           placeholder="> TYPE TO SPEAK..."
           disabled={isProcessing}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
           style={{
             background: isProcessing ? 'rgba(255,255,255,0.02)' : 'transparent',
             border: 'none',
             borderRight: '1px solid #333',
             color: '#e0e0e0',
             fontFamily: '"Space Mono", "Courier New", monospace',
-            fontSize: '14px',
+            fontSize: '16px',
             padding: '0 16px',
             textTransform: 'uppercase',
             outline: 'none',
-            transition: 'background 0.2s'
+            transition: 'background 0.2s',
+            WebkitAppearance: 'none',
+            borderRadius: 0
           }}
         />
         <button
