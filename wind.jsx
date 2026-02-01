@@ -447,6 +447,11 @@ export default function TalkToTheWind() {
       stateRef.current.isShimmering = false;
     }, 4000);
     
+    // Clear message after longer time
+    setTimeout(() => {
+      setWindMessage('');
+    }, 8000);
+    
     setIsProcessing(false);
   }, []);
 
@@ -1219,27 +1224,51 @@ export default function TalkToTheWind() {
       }}>
         <div ref={containerRef} style={{ position: 'absolute', inset: 0, zIndex: 1 }} />
         
-        {/* Log overlay */}
+        {/* Wind's poetic response - large centered display */}
+        {windMessage && (
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 3,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px',
+            pointerEvents: 'none'
+          }}>
+            <div style={{
+              fontSize: isMobile ? '24px' : '32px',
+              fontWeight: '400',
+              color: '#fff',
+              textAlign: 'center',
+              textShadow: '0 0 40px rgba(100, 150, 255, 0.8), 0 0 80px rgba(100, 150, 255, 0.4)',
+              letterSpacing: '2px',
+              lineHeight: 1.4,
+              maxWidth: '600px',
+              animation: 'messageAppear 0.8s ease-out forwards',
+              textTransform: 'none'
+            }}>
+              {windMessage}
+            </div>
+          </div>
+        )}
+        
+        {/* Small status log */}
         <div style={{ 
           position: 'absolute', 
           bottom: 0, 
-          left: 0, 
-          right: 0,
+          left: 0,
           zIndex: 2, 
-          padding: '20px',
-          pointerEvents: 'none',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '4px',
-          background: 'linear-gradient(transparent, rgba(0,0,0,0.8))'
+          padding: '12px 16px',
+          pointerEvents: 'none'
         }}>
-          {logMessages.map((log, i) => (
+          {logMessages.slice(-2).map((log, i) => (
             <div key={i} style={{ 
-              fontSize: '10px', 
-              color: '#555',
-              animation: 'fadeIn 0.3s forwards'
+              fontSize: '9px', 
+              color: '#444',
+              marginBottom: '2px'
             }}>
-              {log.type} <span style={{ color: log.type === 'USR' ? '#888' : '#e0e0e0', marginLeft: '8px' }}>{log.text}</span>
+              {log.type} <span style={{ color: '#666', marginLeft: '6px' }}>{log.text}</span>
             </div>
           ))}
         </div>
@@ -1404,6 +1433,10 @@ export default function TalkToTheWind() {
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(5px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes messageAppear {
+          0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+          100% { opacity: 1; transform: scale(1) translateY(0); }
         }
         .synth-slider::-webkit-slider-runnable-track {
           width: 100%;
