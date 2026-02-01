@@ -1294,7 +1294,7 @@ export default function TalkToTheWind() {
               maxWidth: isMobile ? '90%' : '500px',
               fontStyle: 'italic'
             }}>
-              {windMessage}
+              "{windMessage}"
             </div>
           </div>
         )}
