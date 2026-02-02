@@ -472,6 +472,7 @@ export default function TalkToTheWind() {
   const [currentShape, setCurrentShape] = useState('spirit');
   const [currentMood, setCurrentMood] = useState('calm');
   const [windMessage, setWindMessage] = useState('');
+  const [userMessage, setUserMessage] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isListeningVoice, setIsListeningVoice] = useState(false);
@@ -651,6 +652,7 @@ export default function TalkToTheWind() {
   const askTheWind = useCallback(async (message) => {
     setWindState('thinking');
     setIsProcessing(true);
+    setUserMessage(message); // Store what the user said
     stateRef.current.isShimmering = true;
     stateRef.current.shimmerTime = 0;
     
@@ -732,9 +734,10 @@ export default function TalkToTheWind() {
       stateRef.current.messageShowing = false;
     }, 6000);
     
-    // Clear message after longer time
+    // Clear messages after longer time
     setTimeout(() => {
       setWindMessage('');
+      setUserMessage('');
     }, 8000);
     
     setIsProcessing(false);
@@ -812,7 +815,7 @@ export default function TalkToTheWind() {
         }
       }
       
-      // Show what's being heard
+      // Show what's being heard in the input field
       const displayText = finalTranscript || interimTranscript;
       if (displayText) {
         setInputText(displayText);
@@ -826,12 +829,25 @@ export default function TalkToTheWind() {
         isListeningRef.current = false;
         recognition.stop();
         
-        setInputText('');
+        const message = finalTranscript.trim();
+        
+        // Keep the text visible briefly so user sees what was heard
         setIsListeningVoice(false);
         
+        // Add user message to log immediately
+        setLogMessages(prev => {
+          const newLogs = [...prev, { type: 'USR', text: message.toUpperCase() }];
+          return newLogs.slice(-4);
+        });
+        
+        // Small delay to let user see their message, then process
         setTimeout(() => {
-          askTheWindRef.current(finalTranscript.trim());
-        }, 300);
+          setInputText('');
+          setWindState('listening');
+          setTimeout(() => {
+            askTheWindRef.current(message);
+          }, 300);
+        }, 800);
         
         pendingTranscriptRef.current = '';
       }
@@ -1549,30 +1565,49 @@ export default function TalkToTheWind() {
         <div ref={containerRef} style={{ position: 'absolute', inset: 0, zIndex: 1 }} />
         
         {/* Wind's poetic response - centered display */}
-        {windMessage && (
+        {(windMessage || userMessage) && (
           <div style={{
             position: 'absolute',
             inset: 0,
             zIndex: 3,
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             padding: isMobile ? '24px' : '60px',
             pointerEvents: 'none',
-            animation: 'messageAppear 1s ease-out forwards'
+            gap: '24px'
           }}>
-            <div style={{
-              fontSize: isMobile ? '16px' : '20px',
-              fontWeight: '300',
-              color: '#fff',
-              textAlign: 'center',
-              letterSpacing: '1px',
-              lineHeight: 1.8,
-              maxWidth: isMobile ? '90%' : '500px',
-              fontStyle: 'italic'
-            }}>
-              "{windMessage}"
-            </div>
+            {/* User's question */}
+            {userMessage && (
+              <div style={{
+                fontSize: isMobile ? '12px' : '14px',
+                fontWeight: '400',
+                color: 'rgba(255,255,255,0.5)',
+                textAlign: 'center',
+                letterSpacing: '2px',
+                textTransform: 'uppercase',
+                animation: 'messageAppear 0.5s ease-out forwards'
+              }}>
+                "{userMessage}"
+              </div>
+            )}
+            {/* Wind's response */}
+            {windMessage && (
+              <div style={{
+                fontSize: isMobile ? '16px' : '20px',
+                fontWeight: '300',
+                color: '#fff',
+                textAlign: 'center',
+                letterSpacing: '1px',
+                lineHeight: 1.8,
+                maxWidth: isMobile ? '90%' : '500px',
+                fontStyle: 'italic',
+                animation: 'messageAppear 1s ease-out forwards'
+              }}>
+                "{windMessage}"
+              </div>
+            )}
           </div>
         )}
         
