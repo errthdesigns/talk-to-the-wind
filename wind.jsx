@@ -1344,30 +1344,30 @@ export default function TalkToTheWind() {
           state.isTransitioning = false;
         }
       } else {
-        // Motion presets with slider controls
-        const turb = state.turbulence; // 0-1, adds chaos/randomness
-        const vel = state.velocity;    // 0-1, affects speed
-        const res = state.resonance;   // 0-1, affects oscillation/bounce
+        // Motion presets with slider controls - gentler values to prevent glitching
+        const turb = state.turbulence * 0.3; // Scale down turbulence
+        const vel = state.velocity * 0.5;    // Scale down velocity
+        const res = state.resonance * 0.3;   // Scale down resonance
         
         for (let i = 0; i < PARTICLE_COUNT; i++) {
           const ix = i * 3, iy = i * 3 + 1, iz = i * 3 + 2;
           
-          // Turbulence - random movement based on TUR slider
+          // Turbulence - gentle random movement based on TUR slider
           if (turb > 0.01) {
-            velocities[ix] += (Math.random() - 0.5) * turb * 0.4;
-            velocities[iy] += (Math.random() - 0.5) * turb * 0.4;
-            velocities[iz] += (Math.random() - 0.5) * turb * 0.4;
+            velocities[ix] += (Math.random() - 0.5) * turb * 0.08;
+            velocities[iy] += (Math.random() - 0.5) * turb * 0.08;
+            velocities[iz] += (Math.random() - 0.5) * turb * 0.08;
           }
           
-          // Resonance - wave/oscillation effect based on RES slider
+          // Resonance - gentle wave/oscillation effect based on RES slider
           if (res > 0.01) {
-            const resWave = Math.sin(time * (1 + res * 3) + i * 0.01) * res * 0.15;
+            const resWave = Math.sin(time * (1 + res * 2) + i * 0.01) * res * 0.03;
             velocities[iy] += resWave;
-            velocities[ix] += Math.cos(time * res * 2 + i * 0.005) * res * 0.05;
+            velocities[ix] += Math.cos(time * res + i * 0.005) * res * 0.01;
           }
           
           // Apply motion based on preset (scaled by velocity)
-          const motionScale = 0.3 + vel * 1.5;
+          const motionScale = 0.2 + vel * 0.6;
           switch (state.motionPreset) {
             case 'swirl':
               const swirlAngle = Math.atan2(posArray[iz], posArray[ix]);
@@ -1430,17 +1430,23 @@ export default function TalkToTheWind() {
             }
           }
           
-          // Return to target - stronger when velocity is low
-          const returnStrength = 0.001 + (1 - vel) * 0.003;
+          // Return to target - always maintain shape
+          const returnStrength = 0.008 + (1 - vel) * 0.01;
           velocities[ix] += (targetPositions[ix] - posArray[ix]) * returnStrength;
           velocities[iy] += (targetPositions[iy] - posArray[iy]) * returnStrength;
           velocities[iz] += (targetPositions[iz] - posArray[iz]) * returnStrength;
           
-          // Damping - less damping with higher velocity
-          const damping = 0.96 + vel * 0.03;
+          // Strong damping to prevent runaway velocities
+          const damping = 0.92;
           velocities[ix] *= damping;
           velocities[iy] *= damping;
           velocities[iz] *= damping;
+          
+          // Clamp velocities to prevent extreme movement
+          const maxVel = 3;
+          velocities[ix] = Math.max(-maxVel, Math.min(maxVel, velocities[ix]));
+          velocities[iy] = Math.max(-maxVel, Math.min(maxVel, velocities[iy]));
+          velocities[iz] = Math.max(-maxVel, Math.min(maxVel, velocities[iz]));
           
           posArray[ix] += velocities[ix];
           posArray[iy] += velocities[iy];
