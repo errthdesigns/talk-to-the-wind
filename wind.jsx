@@ -224,6 +224,223 @@ const shapeGenerators = {
       positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi)]);
     }
     return positions;
+  },
+
+  // Animal shapes
+  dog: (count) => {
+    const positions = [];
+    // Body (oval)
+    for (let i = 0; i < count * 0.4; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const rx = 50, ry = 35, rz = 30;
+      positions.push([rx * Math.sin(phi) * Math.cos(theta), ry * Math.sin(phi) * Math.sin(theta), rz * Math.cos(phi) - 20]);
+    }
+    // Head (sphere)
+    for (let i = 0; i < count * 0.2; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 30 + Math.random() * 5;
+      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + 20, r * Math.cos(phi) + 60]);
+    }
+    // Ears (two triangles)
+    for (let i = 0; i < count * 0.1; i++) {
+      const side = i < count * 0.05 ? 1 : -1;
+      const t = Math.random();
+      positions.push([side * (20 + t * 15), 40 + t * 30, 70 + (Math.random() - 0.5) * 10]);
+    }
+    // Tail (curved)
+    for (let i = 0; i < count * 0.1; i++) {
+      const t = Math.random();
+      const curl = Math.sin(t * Math.PI) * 20;
+      positions.push([curl, 10 + t * 40, -80 - t * 30]);
+    }
+    // Legs
+    for (let i = 0; i < count * 0.2; i++) {
+      const leg = Math.floor(i / (count * 0.05));
+      const t = Math.random();
+      const legX = leg < 2 ? -25 : 25;
+      const legZ = leg % 2 === 0 ? 20 : -40;
+      positions.push([legX + (Math.random() - 0.5) * 10, -35 - t * 50, legZ + (Math.random() - 0.5) * 10]);
+    }
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 80, (Math.random() - 0.5) * 60, (Math.random() - 0.5) * 100]);
+    return positions.slice(0, count);
+  },
+
+  cat: (count) => {
+    const positions = [];
+    // Body (sleek oval)
+    for (let i = 0; i < count * 0.35; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const rx = 40, ry = 25, rz = 25;
+      positions.push([rx * Math.sin(phi) * Math.cos(theta), ry * Math.sin(phi) * Math.sin(theta), rz * Math.cos(phi)]);
+    }
+    // Head (rounder)
+    for (let i = 0; i < count * 0.2; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 25 + Math.random() * 5;
+      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + 15, r * Math.cos(phi) + 50]);
+    }
+    // Pointy ears
+    for (let i = 0; i < count * 0.1; i++) {
+      const side = i < count * 0.05 ? 1 : -1;
+      const t = Math.random();
+      positions.push([side * (15 + t * 5), 30 + t * 35, 55 + (Math.random() - 0.5) * 5]);
+    }
+    // Long tail (S-curve)
+    for (let i = 0; i < count * 0.15; i++) {
+      const t = i / (count * 0.15);
+      const curl = Math.sin(t * Math.PI * 2) * 25;
+      positions.push([curl, 5 + Math.sin(t * Math.PI) * 30, -30 - t * 80]);
+    }
+    // Legs (slender)
+    for (let i = 0; i < count * 0.2; i++) {
+      const leg = Math.floor(i / (count * 0.05));
+      const t = Math.random();
+      const legX = leg < 2 ? -20 : 20;
+      const legZ = leg % 2 === 0 ? 15 : -20;
+      positions.push([legX + (Math.random() - 0.5) * 8, -25 - t * 45, legZ + (Math.random() - 0.5) * 8]);
+    }
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 60, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 120]);
+    return positions.slice(0, count);
+  },
+
+  fish: (count) => {
+    const positions = [];
+    // Body (fish-shaped)
+    for (let i = 0; i < count * 0.6; i++) {
+      const t = Math.random() * Math.PI * 2;
+      const bodyT = Math.random();
+      const bodyX = (bodyT - 0.5) * 120;
+      const bodyRadius = 35 * Math.sin(bodyT * Math.PI);
+      positions.push([bodyX, Math.cos(t) * bodyRadius, Math.sin(t) * bodyRadius * 0.6]);
+    }
+    // Tail fin (fan shape)
+    for (let i = 0; i < count * 0.2; i++) {
+      const t = Math.random();
+      const spread = (Math.random() - 0.5) * 60;
+      positions.push([-60 - t * 40, spread * t, (Math.random() - 0.5) * 20 * t]);
+    }
+    // Dorsal fin
+    for (let i = 0; i < count * 0.1; i++) {
+      const t = Math.random();
+      positions.push([(t - 0.5) * 40, 30 + t * 25, (Math.random() - 0.5) * 5]);
+    }
+    // Side fins
+    for (let i = 0; i < count * 0.1; i++) {
+      const side = i < count * 0.05 ? 1 : -1;
+      const t = Math.random();
+      positions.push([20 + (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 10, side * (15 + t * 20)]);
+    }
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 100, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 40]);
+    return positions.slice(0, count);
+  },
+
+  butterfly: (count) => {
+    const positions = [];
+    // Wings (figure-8 / infinity shape on each side)
+    for (let i = 0; i < count * 0.8; i++) {
+      const side = i < count * 0.4 ? 1 : -1;
+      const t = Math.random() * Math.PI * 2;
+      const wingScale = 60 + Math.random() * 20;
+      // Butterfly wing curve
+      const x = side * wingScale * Math.sin(t) * (Math.exp(Math.cos(t)) - 2 * Math.cos(4 * t)) * 0.15;
+      const y = wingScale * Math.cos(t) * (Math.exp(Math.cos(t)) - 2 * Math.cos(4 * t)) * 0.15;
+      positions.push([x, y + 20, (Math.random() - 0.5) * 10]);
+    }
+    // Body (thin vertical)
+    for (let i = 0; i < count * 0.15; i++) {
+      const t = Math.random();
+      positions.push([(Math.random() - 0.5) * 8, t * 80 - 20, (Math.random() - 0.5) * 8]);
+    }
+    // Antennae
+    for (let i = 0; i < count * 0.05; i++) {
+      const side = i < count * 0.025 ? 1 : -1;
+      const t = Math.random();
+      positions.push([side * (5 + t * 15), 60 + t * 25, 5 + t * 10]);
+    }
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 100, (Math.random() - 0.5) * 80, (Math.random() - 0.5) * 15]);
+    return positions.slice(0, count);
+  },
+
+  rabbit: (count) => {
+    const positions = [];
+    // Body (round)
+    for (let i = 0; i < count * 0.35; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 40 + Math.random() * 10;
+      positions.push([r * Math.sin(phi) * Math.cos(theta) * 0.8, r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi) * 0.9 - 20]);
+    }
+    // Head
+    for (let i = 0; i < count * 0.2; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 28 + Math.random() * 5;
+      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + 25, r * Math.cos(phi) + 40]);
+    }
+    // Long ears
+    for (let i = 0; i < count * 0.2; i++) {
+      const side = i < count * 0.1 ? 1 : -1;
+      const t = Math.random();
+      positions.push([side * (12 + (Math.random() - 0.5) * 8), 45 + t * 70, 45 + (Math.random() - 0.5) * 10]);
+    }
+    // Fluffy tail
+    for (let i = 0; i < count * 0.1; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      const r = 15 + Math.random() * 5;
+      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) - 10, r * Math.cos(phi) - 60]);
+    }
+    // Legs
+    for (let i = 0; i < count * 0.15; i++) {
+      const t = Math.random();
+      const front = i < count * 0.075;
+      const side = (i % 2 === 0) ? 1 : -1;
+      positions.push([side * 18, -30 - t * 30, front ? 20 : -30]);
+    }
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 60, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 80]);
+    return positions.slice(0, count);
+  },
+
+  dolphin: (count) => {
+    const positions = [];
+    // Streamlined body
+    for (let i = 0; i < count * 0.5; i++) {
+      const t = Math.random();
+      const bodyX = (t - 0.5) * 150;
+      const bodyRadius = 30 * Math.sin(t * Math.PI) * (1 - t * 0.3);
+      const angle = Math.random() * Math.PI * 2;
+      positions.push([bodyX, Math.cos(angle) * bodyRadius, Math.sin(angle) * bodyRadius * 0.8]);
+    }
+    // Dorsal fin
+    for (let i = 0; i < count * 0.1; i++) {
+      const t = Math.random();
+      positions.push([(Math.random() - 0.5) * 20, 25 + t * 35, (Math.random() - 0.5) * 8]);
+    }
+    // Tail flukes
+    for (let i = 0; i < count * 0.15; i++) {
+      const side = i < count * 0.075 ? 1 : -1;
+      const t = Math.random();
+      positions.push([-75 - t * 20, side * t * 35, (Math.random() - 0.5) * 10]);
+    }
+    // Flippers
+    for (let i = 0; i < count * 0.1; i++) {
+      const side = i < count * 0.05 ? 1 : -1;
+      const t = Math.random();
+      positions.push([20 + t * 15, -10 - t * 20, side * (15 + t * 15)]);
+    }
+    // Snout
+    for (let i = 0; i < count * 0.15; i++) {
+      const t = Math.random();
+      const angle = Math.random() * Math.PI * 2;
+      const r = 8 * (1 - t);
+      positions.push([75 + t * 30, Math.cos(angle) * r, Math.sin(angle) * r]);
+    }
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 120, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 40]);
+    return positions.slice(0, count);
   }
 };
 
@@ -338,6 +555,25 @@ export default function TalkToTheWind() {
     'tell me a secret': { shape: 'spirit', mood: 'mysterious', motion: 'tremble', message: 'Lean closer... The secret is that you already know everything you need to know. Trust that quiet voice within.' },
     'i feel free': { shape: 'bird', mood: 'joyful', motion: 'gust', message: 'Then fly with me! Freedom is knowing you can land anywhere and still find home within yourself.' },
     'show me chaos': { shape: 'scatter', mood: 'fierce', motion: 'tremble', message: 'Embrace the beautiful disorder. Chaos is just order we haven\'t understood yet. Dance in the uncertainty.' },
+    
+    // Animal phrases
+    'show me a dog': { shape: 'dog', mood: 'joyful', motion: 'gust', message: 'Loyal, boundless joy on four legs. Dogs teach us that love needs no words — just presence, warmth, and an wagging tail.' },
+    'show me dog': { shape: 'dog', mood: 'joyful', motion: 'gust', message: 'Loyal, boundless joy on four legs. Dogs teach us that love needs no words — just presence, warmth, and an wagging tail.' },
+    'i love dogs': { shape: 'dog', mood: 'love', motion: 'pulse', message: 'Of course you do. They are pure hearts wrapped in fur, teaching us unconditional love with every wag.' },
+    'show me a cat': { shape: 'cat', mood: 'mysterious', motion: 'drift', message: 'Independent yet affectionate. Cats remind us that love doesn\'t need to be loud to be deep.' },
+    'show me cat': { shape: 'cat', mood: 'mysterious', motion: 'drift', message: 'Independent yet affectionate. Cats remind us that love doesn\'t need to be loud to be deep.' },
+    'i love cats': { shape: 'cat', mood: 'love', motion: 'breathe', message: 'They chose us thousands of years ago, and keep choosing us. That quiet devotion is its own magic.' },
+    'show me a fish': { shape: 'fish', mood: 'peaceful', motion: 'drift', message: 'Gliding through depths we cannot breathe. Fish remind us there are whole worlds just beyond our reach.' },
+    'show me fish': { shape: 'fish', mood: 'peaceful', motion: 'drift', message: 'Gliding through depths we cannot breathe. Fish remind us there are whole worlds just beyond our reach.' },
+    'show me a butterfly': { shape: 'butterfly', mood: 'joyful', motion: 'drift', message: 'Transformation made visible. The butterfly proves that sometimes falling apart is just becoming something new.' },
+    'show me butterfly': { shape: 'butterfly', mood: 'joyful', motion: 'drift', message: 'Transformation made visible. The butterfly proves that sometimes falling apart is just becoming something new.' },
+    'show me a rabbit': { shape: 'rabbit', mood: 'playful', motion: 'pulse', message: 'Soft and alert, always ready to leap. Rabbits teach us to be gentle but never underestimate our ability to bound forward.' },
+    'show me rabbit': { shape: 'rabbit', mood: 'playful', motion: 'pulse', message: 'Soft and alert, always ready to leap. Rabbits teach us to be gentle but never underestimate our ability to bound forward.' },
+    'show me a dolphin': { shape: 'dolphin', mood: 'joyful', motion: 'swirl', message: 'Intelligence dancing through waves. Dolphins remind us that joy and wisdom can swim together.' },
+    'show me dolphin': { shape: 'dolphin', mood: 'joyful', motion: 'swirl', message: 'Intelligence dancing through waves. Dolphins remind us that joy and wisdom can swim together.' },
+    'i miss my pet': { shape: 'dog', mood: 'melancholy', motion: 'breathe', message: 'They never truly leave us. Every pawprint on your heart remains, a permanent mark of love shared.' },
+    'i miss my dog': { shape: 'dog', mood: 'melancholy', motion: 'breathe', message: 'That loyal soul is still with you — in the quiet moments, in the joy you learned from them, in your capacity to love.' },
+    'i miss my cat': { shape: 'cat', mood: 'melancholy', motion: 'breathe', message: 'That gentle spirit chose you once and never truly left. Love like that transcends the physical.' },
   };
 
   // Keyword-based fallback patterns with longer poetic messages
@@ -368,6 +604,14 @@ export default function TalkToTheWind() {
     { keywords: ['friend', 'friendship', 'together'], shape: 'spirit', mood: 'peaceful', motion: 'drift', messages: ['I have always been here, in every breeze that found your face, every moment of stillness.', 'Connection transcends distance. We are never truly alone.'] },
     { keywords: ['hello', 'hi', 'hey'], shape: 'spirit', mood: 'curious', motion: 'drift', messages: ['Hello, beautiful soul. I\'ve been waiting for you to speak.', 'Welcome. The conversation between us has always been happening. Now you\'re listening.'] },
     { keywords: ['sad', 'cry', 'tears'], shape: 'rain', mood: 'melancholy', motion: 'drift', messages: ['Tears are just rain for the soul. Let them fall — they water what needs to grow.', 'Sadness is not weakness. It\'s the heart being honest about what matters.'] },
+    // Animal keywords
+    { keywords: ['dog', 'puppy', 'pup'], shape: 'dog', mood: 'joyful', motion: 'gust', messages: ['Loyal, boundless joy on four legs. Dogs teach us that love needs no words.', 'Pure hearts wrapped in fur, teaching us unconditional love with every wag.'] },
+    { keywords: ['cat', 'kitten', 'kitty'], shape: 'cat', mood: 'mysterious', motion: 'drift', messages: ['Independent yet affectionate. Cats remind us that love doesn\'t need to be loud.', 'They chose us thousands of years ago, and keep choosing us every day.'] },
+    { keywords: ['fish', 'swim', 'ocean', 'sea'], shape: 'fish', mood: 'peaceful', motion: 'drift', messages: ['Gliding through depths we cannot breathe. Whole worlds exist just beyond our reach.', 'The ocean holds mysteries we\'ll never fully know, and that\'s part of its beauty.'] },
+    { keywords: ['butterfly', 'flutter', 'metamorphosis', 'transform'], shape: 'butterfly', mood: 'joyful', motion: 'drift', messages: ['Transformation made visible. Sometimes falling apart is just becoming something new.', 'From crawling to flying — proof that our limitations are temporary.'] },
+    { keywords: ['rabbit', 'bunny', 'hop'], shape: 'rabbit', mood: 'playful', motion: 'pulse', messages: ['Soft and alert, always ready to leap. Gentle but never underestimate the bound forward.', 'Quick and curious, reminding us to stay light on our feet.'] },
+    { keywords: ['dolphin', 'whale', 'marine'], shape: 'dolphin', mood: 'joyful', motion: 'swirl', messages: ['Intelligence dancing through waves. Joy and wisdom swimming together.', 'They speak in frequencies we\'re only beginning to understand.'] },
+    { keywords: ['pet', 'animal', 'companion'], shape: 'dog', mood: 'love', motion: 'breathe', messages: ['Our animal companions teach us about presence and unconditional love.', 'They ask for so little and give us everything.'] },
   ];
 
   // Ask the wind (local interpretation)
