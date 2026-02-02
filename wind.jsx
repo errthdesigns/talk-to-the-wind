@@ -226,34 +226,35 @@ const shapeGenerators = {
     return positions;
   },
 
-  // Animal shapes
+  // Animal shapes - centered around y=30 for viewport
   dog: (count) => {
     const positions = [];
+    const yOffset = 30; // Center offset
     // Body (oval)
     for (let i = 0; i < count * 0.4; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const rx = 50, ry = 35, rz = 30;
-      positions.push([rx * Math.sin(phi) * Math.cos(theta), ry * Math.sin(phi) * Math.sin(theta), rz * Math.cos(phi) - 20]);
+      positions.push([rx * Math.sin(phi) * Math.cos(theta), ry * Math.sin(phi) * Math.sin(theta) + yOffset, rz * Math.cos(phi) - 20]);
     }
     // Head (sphere)
     for (let i = 0; i < count * 0.2; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = 30 + Math.random() * 5;
-      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + 20, r * Math.cos(phi) + 60]);
+      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + 20 + yOffset, r * Math.cos(phi) + 60]);
     }
     // Ears (two triangles)
     for (let i = 0; i < count * 0.1; i++) {
       const side = i < count * 0.05 ? 1 : -1;
       const t = Math.random();
-      positions.push([side * (20 + t * 15), 40 + t * 30, 70 + (Math.random() - 0.5) * 10]);
+      positions.push([side * (20 + t * 15), 40 + t * 30 + yOffset, 70 + (Math.random() - 0.5) * 10]);
     }
     // Tail (curved)
     for (let i = 0; i < count * 0.1; i++) {
       const t = Math.random();
       const curl = Math.sin(t * Math.PI) * 20;
-      positions.push([curl, 10 + t * 40, -80 - t * 30]);
+      positions.push([curl, 10 + t * 40 + yOffset, -80 - t * 30]);
     }
     // Legs
     for (let i = 0; i < count * 0.2; i++) {
@@ -261,39 +262,40 @@ const shapeGenerators = {
       const t = Math.random();
       const legX = leg < 2 ? -25 : 25;
       const legZ = leg % 2 === 0 ? 20 : -40;
-      positions.push([legX + (Math.random() - 0.5) * 10, -35 - t * 50, legZ + (Math.random() - 0.5) * 10]);
+      positions.push([legX + (Math.random() - 0.5) * 10, -35 - t * 30 + yOffset, legZ + (Math.random() - 0.5) * 10]);
     }
-    while (positions.length < count) positions.push([(Math.random() - 0.5) * 80, (Math.random() - 0.5) * 60, (Math.random() - 0.5) * 100]);
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 80, (Math.random() - 0.5) * 60 + yOffset, (Math.random() - 0.5) * 100]);
     return positions.slice(0, count);
   },
 
   cat: (count) => {
     const positions = [];
+    const yOffset = 30;
     // Body (sleek oval)
     for (let i = 0; i < count * 0.35; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const rx = 40, ry = 25, rz = 25;
-      positions.push([rx * Math.sin(phi) * Math.cos(theta), ry * Math.sin(phi) * Math.sin(theta), rz * Math.cos(phi)]);
+      positions.push([rx * Math.sin(phi) * Math.cos(theta), ry * Math.sin(phi) * Math.sin(theta) + yOffset, rz * Math.cos(phi)]);
     }
     // Head (rounder)
     for (let i = 0; i < count * 0.2; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = 25 + Math.random() * 5;
-      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + 15, r * Math.cos(phi) + 50]);
+      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + 15 + yOffset, r * Math.cos(phi) + 50]);
     }
     // Pointy ears
     for (let i = 0; i < count * 0.1; i++) {
       const side = i < count * 0.05 ? 1 : -1;
       const t = Math.random();
-      positions.push([side * (15 + t * 5), 30 + t * 35, 55 + (Math.random() - 0.5) * 5]);
+      positions.push([side * (15 + t * 5), 30 + t * 35 + yOffset, 55 + (Math.random() - 0.5) * 5]);
     }
     // Long tail (S-curve)
     for (let i = 0; i < count * 0.15; i++) {
       const t = i / (count * 0.15);
       const curl = Math.sin(t * Math.PI * 2) * 25;
-      positions.push([curl, 5 + Math.sin(t * Math.PI) * 30, -30 - t * 80]);
+      positions.push([curl, 5 + Math.sin(t * Math.PI) * 30 + yOffset, -30 - t * 80]);
     }
     // Legs (slender)
     for (let i = 0; i < count * 0.2; i++) {
@@ -301,45 +303,47 @@ const shapeGenerators = {
       const t = Math.random();
       const legX = leg < 2 ? -20 : 20;
       const legZ = leg % 2 === 0 ? 15 : -20;
-      positions.push([legX + (Math.random() - 0.5) * 8, -25 - t * 45, legZ + (Math.random() - 0.5) * 8]);
+      positions.push([legX + (Math.random() - 0.5) * 8, -25 - t * 30 + yOffset, legZ + (Math.random() - 0.5) * 8]);
     }
-    while (positions.length < count) positions.push([(Math.random() - 0.5) * 60, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 120]);
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 60, (Math.random() - 0.5) * 50 + yOffset, (Math.random() - 0.5) * 120]);
     return positions.slice(0, count);
   },
 
   fish: (count) => {
     const positions = [];
+    const yOffset = 30;
     // Body (fish-shaped)
     for (let i = 0; i < count * 0.6; i++) {
       const t = Math.random() * Math.PI * 2;
       const bodyT = Math.random();
       const bodyX = (bodyT - 0.5) * 120;
       const bodyRadius = 35 * Math.sin(bodyT * Math.PI);
-      positions.push([bodyX, Math.cos(t) * bodyRadius, Math.sin(t) * bodyRadius * 0.6]);
+      positions.push([bodyX, Math.cos(t) * bodyRadius + yOffset, Math.sin(t) * bodyRadius * 0.6]);
     }
     // Tail fin (fan shape)
     for (let i = 0; i < count * 0.2; i++) {
       const t = Math.random();
       const spread = (Math.random() - 0.5) * 60;
-      positions.push([-60 - t * 40, spread * t, (Math.random() - 0.5) * 20 * t]);
+      positions.push([-60 - t * 40, spread * t + yOffset, (Math.random() - 0.5) * 20 * t]);
     }
     // Dorsal fin
     for (let i = 0; i < count * 0.1; i++) {
       const t = Math.random();
-      positions.push([(t - 0.5) * 40, 30 + t * 25, (Math.random() - 0.5) * 5]);
+      positions.push([(t - 0.5) * 40, 30 + t * 25 + yOffset, (Math.random() - 0.5) * 5]);
     }
     // Side fins
     for (let i = 0; i < count * 0.1; i++) {
       const side = i < count * 0.05 ? 1 : -1;
       const t = Math.random();
-      positions.push([20 + (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 10, side * (15 + t * 20)]);
+      positions.push([20 + (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 10 + yOffset, side * (15 + t * 20)]);
     }
-    while (positions.length < count) positions.push([(Math.random() - 0.5) * 100, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 40]);
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 100, (Math.random() - 0.5) * 50 + yOffset, (Math.random() - 0.5) * 40]);
     return positions.slice(0, count);
   },
 
   butterfly: (count) => {
     const positions = [];
+    const yOffset = 30;
     // Wings (figure-8 / infinity shape on each side)
     for (let i = 0; i < count * 0.8; i++) {
       const side = i < count * 0.4 ? 1 : -1;
@@ -348,98 +352,100 @@ const shapeGenerators = {
       // Butterfly wing curve
       const x = side * wingScale * Math.sin(t) * (Math.exp(Math.cos(t)) - 2 * Math.cos(4 * t)) * 0.15;
       const y = wingScale * Math.cos(t) * (Math.exp(Math.cos(t)) - 2 * Math.cos(4 * t)) * 0.15;
-      positions.push([x, y + 20, (Math.random() - 0.5) * 10]);
+      positions.push([x, y + yOffset, (Math.random() - 0.5) * 10]);
     }
     // Body (thin vertical)
     for (let i = 0; i < count * 0.15; i++) {
       const t = Math.random();
-      positions.push([(Math.random() - 0.5) * 8, t * 80 - 20, (Math.random() - 0.5) * 8]);
+      positions.push([(Math.random() - 0.5) * 8, t * 80 - 20 + yOffset, (Math.random() - 0.5) * 8]);
     }
     // Antennae
     for (let i = 0; i < count * 0.05; i++) {
       const side = i < count * 0.025 ? 1 : -1;
       const t = Math.random();
-      positions.push([side * (5 + t * 15), 60 + t * 25, 5 + t * 10]);
+      positions.push([side * (5 + t * 15), 60 + t * 25 + yOffset, 5 + t * 10]);
     }
-    while (positions.length < count) positions.push([(Math.random() - 0.5) * 100, (Math.random() - 0.5) * 80, (Math.random() - 0.5) * 15]);
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 100, (Math.random() - 0.5) * 80 + yOffset, (Math.random() - 0.5) * 15]);
     return positions.slice(0, count);
   },
 
   rabbit: (count) => {
     const positions = [];
+    const yOffset = 30;
     // Body (round)
     for (let i = 0; i < count * 0.35; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = 40 + Math.random() * 10;
-      positions.push([r * Math.sin(phi) * Math.cos(theta) * 0.8, r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi) * 0.9 - 20]);
+      positions.push([r * Math.sin(phi) * Math.cos(theta) * 0.8, r * Math.sin(phi) * Math.sin(theta) + yOffset, r * Math.cos(phi) * 0.9 - 20]);
     }
     // Head
     for (let i = 0; i < count * 0.2; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = 28 + Math.random() * 5;
-      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + 25, r * Math.cos(phi) + 40]);
+      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + 25 + yOffset, r * Math.cos(phi) + 40]);
     }
     // Long ears
     for (let i = 0; i < count * 0.2; i++) {
       const side = i < count * 0.1 ? 1 : -1;
       const t = Math.random();
-      positions.push([side * (12 + (Math.random() - 0.5) * 8), 45 + t * 70, 45 + (Math.random() - 0.5) * 10]);
+      positions.push([side * (12 + (Math.random() - 0.5) * 8), 45 + t * 70 + yOffset, 45 + (Math.random() - 0.5) * 10]);
     }
     // Fluffy tail
     for (let i = 0; i < count * 0.1; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = 15 + Math.random() * 5;
-      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) - 10, r * Math.cos(phi) - 60]);
+      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) - 10 + yOffset, r * Math.cos(phi) - 60]);
     }
     // Legs
     for (let i = 0; i < count * 0.15; i++) {
       const t = Math.random();
       const front = i < count * 0.075;
       const side = (i % 2 === 0) ? 1 : -1;
-      positions.push([side * 18, -30 - t * 30, front ? 20 : -30]);
+      positions.push([side * 18, -30 - t * 20 + yOffset, front ? 20 : -30]);
     }
-    while (positions.length < count) positions.push([(Math.random() - 0.5) * 60, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 80]);
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 60, (Math.random() - 0.5) * 100 + yOffset, (Math.random() - 0.5) * 80]);
     return positions.slice(0, count);
   },
 
   dolphin: (count) => {
     const positions = [];
+    const yOffset = 30;
     // Streamlined body
     for (let i = 0; i < count * 0.5; i++) {
       const t = Math.random();
       const bodyX = (t - 0.5) * 150;
       const bodyRadius = 30 * Math.sin(t * Math.PI) * (1 - t * 0.3);
       const angle = Math.random() * Math.PI * 2;
-      positions.push([bodyX, Math.cos(angle) * bodyRadius, Math.sin(angle) * bodyRadius * 0.8]);
+      positions.push([bodyX, Math.cos(angle) * bodyRadius + yOffset, Math.sin(angle) * bodyRadius * 0.8]);
     }
     // Dorsal fin
     for (let i = 0; i < count * 0.1; i++) {
       const t = Math.random();
-      positions.push([(Math.random() - 0.5) * 20, 25 + t * 35, (Math.random() - 0.5) * 8]);
+      positions.push([(Math.random() - 0.5) * 20, 25 + t * 35 + yOffset, (Math.random() - 0.5) * 8]);
     }
     // Tail flukes
     for (let i = 0; i < count * 0.15; i++) {
       const side = i < count * 0.075 ? 1 : -1;
       const t = Math.random();
-      positions.push([-75 - t * 20, side * t * 35, (Math.random() - 0.5) * 10]);
+      positions.push([-75 - t * 20, side * t * 35 + yOffset, (Math.random() - 0.5) * 10]);
     }
     // Flippers
     for (let i = 0; i < count * 0.1; i++) {
       const side = i < count * 0.05 ? 1 : -1;
       const t = Math.random();
-      positions.push([20 + t * 15, -10 - t * 20, side * (15 + t * 15)]);
+      positions.push([20 + t * 15, -10 - t * 20 + yOffset, side * (15 + t * 15)]);
     }
     // Snout
     for (let i = 0; i < count * 0.15; i++) {
       const t = Math.random();
       const angle = Math.random() * Math.PI * 2;
       const r = 8 * (1 - t);
-      positions.push([75 + t * 30, Math.cos(angle) * r, Math.sin(angle) * r]);
+      positions.push([75 + t * 30, Math.cos(angle) * r + yOffset, Math.sin(angle) * r]);
     }
-    while (positions.length < count) positions.push([(Math.random() - 0.5) * 120, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 40]);
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 120, (Math.random() - 0.5) * 50 + yOffset, (Math.random() - 0.5) * 40]);
     return positions.slice(0, count);
   }
 };
