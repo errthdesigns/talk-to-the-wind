@@ -416,6 +416,72 @@ const shapeGenerators = {
     return positions.slice(0, count);
   },
 
+  wine: (count) => {
+    const positions = [];
+    const yOffset = 20;
+    
+    // Wine bottle (left side)
+    // Bottle body (cylinder)
+    for (let i = 0; i < count * 0.25; i++) {
+      const t = Math.random();
+      const angle = Math.random() * Math.PI * 2;
+      const y = t * 120 - 40;
+      const radius = y > 50 ? 8 + (80 - y) * 0.15 : 25; // Neck narrows
+      positions.push([-50 + Math.cos(angle) * radius, y + yOffset, Math.sin(angle) * radius]);
+    }
+    // Bottle neck
+    for (let i = 0; i < count * 0.08; i++) {
+      const t = Math.random();
+      const angle = Math.random() * Math.PI * 2;
+      const y = 50 + t * 35;
+      const radius = 8 - t * 3;
+      positions.push([-50 + Math.cos(angle) * radius, y + yOffset, Math.sin(angle) * radius]);
+    }
+    // Bottle top rim
+    for (let i = 0; i < count * 0.02; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      positions.push([-50 + Math.cos(angle) * 6, 85 + yOffset + (Math.random() - 0.5) * 5, Math.sin(angle) * 6]);
+    }
+    
+    // Wine glass (right side)
+    // Glass bowl (curved)
+    for (let i = 0; i < count * 0.25; i++) {
+      const t = Math.random();
+      const angle = Math.random() * Math.PI * 2;
+      const y = t * 50;
+      // Parabolic curve for wine glass bowl
+      const radius = 5 + Math.sqrt(y) * 4;
+      positions.push([50 + Math.cos(angle) * radius, y + yOffset, Math.sin(angle) * radius]);
+    }
+    // Glass stem
+    for (let i = 0; i < count * 0.1; i++) {
+      const t = Math.random();
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 3 + Math.random() * 2;
+      positions.push([50 + Math.cos(angle) * radius, -40 + t * 40 + yOffset, Math.sin(angle) * radius]);
+    }
+    // Glass base
+    for (let i = 0; i < count * 0.1; i++) {
+      const t = Math.random();
+      const angle = Math.random() * Math.PI * 2;
+      const radius = t * 20;
+      positions.push([50 + Math.cos(angle) * radius, -45 + yOffset + (Math.random() - 0.5) * 5, Math.sin(angle) * radius]);
+    }
+    // Wine in glass (liquid surface)
+    for (let i = 0; i < count * 0.1; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const r = Math.random() * 22;
+      positions.push([50 + Math.cos(angle) * r, 30 + yOffset + (Math.random() - 0.5) * 3, Math.sin(angle) * r]);
+    }
+    // Ambient particles around both
+    for (let i = 0; i < count * 0.1; i++) {
+      positions.push([(Math.random() - 0.5) * 150, (Math.random() - 0.5) * 100 + yOffset + 20, (Math.random() - 0.5) * 60]);
+    }
+    
+    while (positions.length < count) positions.push([(Math.random() - 0.5) * 150, (Math.random() - 0.5) * 120 + yOffset, (Math.random() - 0.5) * 60]);
+    return positions.slice(0, count);
+  },
+
   dolphin: (count) => {
     const positions = [];
     const yOffset = 30;
@@ -607,6 +673,15 @@ export default function TalkToTheWind() {
     'i miss my pet': { shape: 'dog', mood: 'melancholy', motion: 'breathe', message: 'They never truly leave us. Every pawprint on your heart remains, a permanent mark of love shared.' },
     'i miss my dog': { shape: 'dog', mood: 'melancholy', motion: 'breathe', message: 'That loyal soul is still with you — in the quiet moments, in the joy you learned from them, in your capacity to love.' },
     'i miss my cat': { shape: 'cat', mood: 'melancholy', motion: 'breathe', message: 'That gentle spirit chose you once and never truly left. Love like that transcends the physical.' },
+    
+    // Wine phrases
+    'i want wine': { shape: 'wine', mood: 'peaceful', motion: 'drift', message: 'Pour slowly, savor deeply. Wine is just grapes that learned patience — and so can we.' },
+    'i want to drink wine': { shape: 'wine', mood: 'peaceful', motion: 'drift', message: 'The best conversations happen over a glass. Wine opens doors that words cannot.' },
+    'show me wine': { shape: 'wine', mood: 'peaceful', motion: 'breathe', message: 'Aged in darkness, opened in celebration. Every bottle holds time itself.' },
+    'i need a drink': { shape: 'wine', mood: 'calm', motion: 'drift', message: 'Sometimes we need to pause and pour. Let the moment breathe, like good wine.' },
+    'cheers': { shape: 'wine', mood: 'joyful', motion: 'pulse', message: 'To this moment, to you, to all the beautiful chaos of being alive. Cheers!' },
+    'lets celebrate': { shape: 'wine', mood: 'joyful', motion: 'swirl', message: 'Every breath is worth celebrating. Raise your glass to simply being here.' },
+    "let's celebrate": { shape: 'wine', mood: 'joyful', motion: 'swirl', message: 'Every breath is worth celebrating. Raise your glass to simply being here.' },
   };
 
   // Keyword-based fallback patterns with longer poetic messages
@@ -652,6 +727,7 @@ export default function TalkToTheWind() {
     { keywords: ['rabbit', 'bunny', 'hop'], shape: 'rabbit', mood: 'playful', motion: 'pulse', messages: ['Soft and alert, always ready to leap. Gentle but never underestimate the bound forward.', 'Quick and curious, reminding us to stay light on our feet.'] },
     { keywords: ['dolphin', 'whale', 'marine'], shape: 'dolphin', mood: 'joyful', motion: 'swirl', messages: ['Intelligence dancing through waves. Joy and wisdom swimming together.', 'They speak in frequencies we\'re only beginning to understand.'] },
     { keywords: ['pet', 'animal', 'companion'], shape: 'dog', mood: 'love', motion: 'breathe', messages: ['Our animal companions teach us about presence and unconditional love.', 'They ask for so little and give us everything.'] },
+    { keywords: ['wine', 'drink', 'glass', 'bottle', 'cheers', 'toast', 'celebrate'], shape: 'wine', mood: 'peaceful', motion: 'drift', messages: ['Pour slowly, savor deeply. Wine teaches us patience.', 'The best moments are shared over a glass. Let\'s raise one together.'] },
   ];
 
   // Ask the wind (local interpretation)
