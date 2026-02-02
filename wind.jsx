@@ -1350,42 +1350,50 @@ export default function TalkToTheWind() {
           state.isTransitioning = false;
         }
       } else {
-        // Motion presets with slider controls - gentler values to prevent glitching
-        const turb = state.turbulence * 0.3; // Scale down turbulence
-        const vel = state.velocity * 0.5;    // Scale down velocity
-        const res = state.resonance * 0.3;   // Scale down resonance
+        // Motion presets with slider controls - balanced for dynamics
+        const turb = state.turbulence;
+        const vel = state.velocity;
+        const res = state.resonance;
         
         for (let i = 0; i < PARTICLE_COUNT; i++) {
           const ix = i * 3, iy = i * 3 + 1, iz = i * 3 + 2;
           
-          // Turbulence - gentle random movement based on TUR slider
+          // Turbulence - organic random movement based on TUR slider
           if (turb > 0.01) {
-            velocities[ix] += (Math.random() - 0.5) * turb * 0.08;
-            velocities[iy] += (Math.random() - 0.5) * turb * 0.08;
-            velocities[iz] += (Math.random() - 0.5) * turb * 0.08;
+            const turbNoise = Math.sin(time * 2 + i * 0.1) * 0.5 + 0.5;
+            velocities[ix] += (Math.random() - 0.5) * turb * 0.15 * turbNoise;
+            velocities[iy] += (Math.random() - 0.5) * turb * 0.15 * turbNoise;
+            velocities[iz] += (Math.random() - 0.5) * turb * 0.15 * turbNoise;
           }
           
-          // Resonance - gentle wave/oscillation effect based on RES slider
+          // Resonance - breathing/wave oscillation effect based on RES slider
           if (res > 0.01) {
-            const resWave = Math.sin(time * (1 + res * 2) + i * 0.01) * res * 0.03;
+            const phase = i * 0.001;
+            const resWave = Math.sin(time * (0.8 + res) + phase) * res * 0.08;
             velocities[iy] += resWave;
-            velocities[ix] += Math.cos(time * res + i * 0.005) * res * 0.01;
+            velocities[ix] += Math.cos(time * 0.6 + phase) * res * 0.04;
+            velocities[iz] += Math.sin(time * 0.4 + phase * 2) * res * 0.03;
           }
           
           // Apply motion based on preset (scaled by velocity)
-          const motionScale = 0.2 + vel * 0.6;
+          const motionScale = 0.4 + vel * 0.8;
           switch (state.motionPreset) {
             case 'swirl':
               const swirlAngle = Math.atan2(posArray[iz], posArray[ix]);
-              velocities[ix] += Math.cos(swirlAngle + Math.PI / 2) * 0.1 * motionScale;
-              velocities[iz] += Math.sin(swirlAngle + Math.PI / 2) * 0.1 * motionScale;
+              const swirlStrength = 0.15 + Math.sin(time * 0.5) * 0.05;
+              velocities[ix] += Math.cos(swirlAngle + Math.PI / 2) * swirlStrength * motionScale;
+              velocities[iz] += Math.sin(swirlAngle + Math.PI / 2) * swirlStrength * motionScale;
+              velocities[iy] += Math.sin(time * 2 + i * 0.01) * 0.02 * motionScale;
               break;
             case 'gust':
-              velocities[ix] += Math.cos(state.gustDirection) * 0.15 * motionScale;
-              velocities[iz] += Math.sin(state.gustDirection) * 0.05 * motionScale;
+              state.gustDirection += 0.02;
+              const gustStrength = 0.2 + Math.sin(time) * 0.1;
+              velocities[ix] += Math.cos(state.gustDirection) * gustStrength * motionScale;
+              velocities[iz] += Math.sin(state.gustDirection) * 0.08 * motionScale;
+              velocities[iy] += (Math.random() - 0.5) * 0.05 * motionScale;
               break;
             case 'breathe':
-              const breathe = Math.sin(time * (0.5 + vel)) * 0.03 * motionScale;
+              const breathe = Math.sin(time * 0.8) * 0.06 * motionScale;
               const dist = Math.sqrt(posArray[ix] ** 2 + posArray[iy] ** 2 + posArray[iz] ** 2);
               if (dist > 0) {
                 velocities[ix] += (posArray[ix] / dist) * breathe;
@@ -1394,23 +1402,34 @@ export default function TalkToTheWind() {
               }
               break;
             case 'tremble':
-              velocities[ix] += (Math.random() - 0.5) * 0.4 * motionScale;
-              velocities[iy] += (Math.random() - 0.5) * 0.4 * motionScale;
-              velocities[iz] += (Math.random() - 0.5) * 0.4 * motionScale;
+              const trembleIntensity = 0.3 + Math.sin(time * 3) * 0.15;
+              velocities[ix] += (Math.random() - 0.5) * trembleIntensity * motionScale;
+              velocities[iy] += (Math.random() - 0.5) * trembleIntensity * motionScale;
+              velocities[iz] += (Math.random() - 0.5) * trembleIntensity * motionScale;
               break;
             case 'pulse':
-              const pulse = Math.sin(time * (2 + vel * 2)) > 0.7 ? 0.6 : 0;
-              velocities[iy] += pulse * motionScale * (Math.random() - 0.3);
+              const pulseWave = Math.sin(time * 2.5);
+              const pulse = pulseWave > 0.5 ? (pulseWave - 0.5) * 0.4 : 0;
+              const pulseDist = Math.sqrt(posArray[ix] ** 2 + posArray[iy] ** 2 + posArray[iz] ** 2);
+              if (pulseDist > 0) {
+                velocities[ix] += (posArray[ix] / pulseDist) * pulse * motionScale;
+                velocities[iy] += (posArray[iy] / pulseDist) * pulse * motionScale;
+                velocities[iz] += (posArray[iz] / pulseDist) * pulse * motionScale;
+              }
               break;
             case 'orbit':
-              const orbitSpeed = 0.005 + vel * 0.02;
+              const orbitSpeed = 0.01 + vel * 0.02;
               const orbitAngle = Math.atan2(posArray[iz], posArray[ix]) + orbitSpeed;
               const orbitDist = Math.sqrt(posArray[ix] ** 2 + posArray[iz] ** 2);
-              velocities[ix] += (Math.cos(orbitAngle) * orbitDist - posArray[ix]) * 0.015;
-              velocities[iz] += (Math.sin(orbitAngle) * orbitDist - posArray[iz]) * 0.015;
+              velocities[ix] += (Math.cos(orbitAngle) * orbitDist - posArray[ix]) * 0.02;
+              velocities[iz] += (Math.sin(orbitAngle) * orbitDist - posArray[iz]) * 0.02;
+              velocities[iy] += Math.sin(time + i * 0.005) * 0.015 * motionScale;
               break;
-            default: // drift
-              velocities[iy] += Math.sin(time + i * 0.01) * 0.01 * motionScale;
+            default: // drift - gentle floating movement
+              const driftPhase = i * 0.001;
+              velocities[iy] += Math.sin(time * 0.7 + driftPhase) * 0.025 * motionScale;
+              velocities[ix] += Math.cos(time * 0.4 + driftPhase) * 0.015 * motionScale;
+              velocities[iz] += Math.sin(time * 0.5 + driftPhase * 2) * 0.01 * motionScale;
               velocities[ix] += Math.cos(time * 0.5 + i * 0.005) * 0.005 * motionScale;
           }
           
@@ -1436,20 +1455,20 @@ export default function TalkToTheWind() {
             }
           }
           
-          // Return to target - always maintain shape
-          const returnStrength = 0.008 + (1 - vel) * 0.01;
+          // Return to target - elastic spring effect
+          const returnStrength = 0.004 + (1 - vel) * 0.006;
           velocities[ix] += (targetPositions[ix] - posArray[ix]) * returnStrength;
           velocities[iy] += (targetPositions[iy] - posArray[iy]) * returnStrength;
           velocities[iz] += (targetPositions[iz] - posArray[iz]) * returnStrength;
           
-          // Strong damping to prevent runaway velocities
-          const damping = 0.92;
+          // Damping - allows more flow with higher velocity
+          const damping = 0.94 + vel * 0.03;
           velocities[ix] *= damping;
           velocities[iy] *= damping;
           velocities[iz] *= damping;
           
           // Clamp velocities to prevent extreme movement
-          const maxVel = 3;
+          const maxVel = 2;
           velocities[ix] = Math.max(-maxVel, Math.min(maxVel, velocities[ix]));
           velocities[iy] = Math.max(-maxVel, Math.min(maxVel, velocities[iy]));
           velocities[iz] = Math.max(-maxVel, Math.min(maxVel, velocities[iz]));
