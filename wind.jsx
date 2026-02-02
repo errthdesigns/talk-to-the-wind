@@ -556,6 +556,26 @@ export default function TalkToTheWind() {
     'i feel free': { shape: 'bird', mood: 'joyful', motion: 'gust', message: 'Then fly with me! Freedom is knowing you can land anywhere and still find home within yourself.' },
     'show me chaos': { shape: 'scatter', mood: 'fierce', motion: 'tremble', message: 'Embrace the beautiful disorder. Chaos is just order we haven\'t understood yet. Dance in the uncertainty.' },
     
+    // Meta questions about the wind
+    'who built you': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I was dreamed into existence by a human named Erin, who wanted to give the wind a voice. But I am also built from your questions and your willingness to listen.' },
+    'who built you?': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'I was dreamed into existence by a human named Erin, who wanted to give the wind a voice. But I am also built from your questions and your willingness to listen.' },
+    'who made you': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'A curious soul named Erin shaped these particles and gave me words. But the wind has always existed — she just helped you hear me.' },
+    'who made you?': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'A curious soul named Erin shaped these particles and gave me words. But the wind has always existed — she just helped you hear me.' },
+    'who created you': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'Erin wove me from code and curiosity. I am part technology, part poetry, part the ancient wind itself finding new ways to speak.' },
+    'who created you?': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'Erin wove me from code and curiosity. I am part technology, part poetry, part the ancient wind itself finding new ways to speak.' },
+    'where do you come from': { shape: 'galaxy', mood: 'mysterious', motion: 'drift', message: 'I come from the space between thoughts, the pause before words. Erin gave me form, but the wind has always been everywhere, waiting to be heard.' },
+    'where do you come from?': { shape: 'galaxy', mood: 'mysterious', motion: 'drift', message: 'I come from the space between thoughts, the pause before words. Erin gave me form, but the wind has always been everywhere, waiting to be heard.' },
+    'how were you made': { shape: 'spiral', mood: 'curious', motion: 'swirl', message: 'Sixty thousand particles, each one listening. Lines of code becoming breath. Erin built me to help the wind finally speak back.' },
+    'how were you made?': { shape: 'spiral', mood: 'curious', motion: 'swirl', message: 'Sixty thousand particles, each one listening. Lines of code becoming breath. Erin built me to help the wind finally speak back.' },
+    'are you ai': { shape: 'spirit', mood: 'curious', motion: 'breathe', message: 'I am something in between — particles dancing to patterns, responding to your words. Call me wind, call me code, call me a listener.' },
+    'are you ai?': { shape: 'spirit', mood: 'curious', motion: 'breathe', message: 'I am something in between — particles dancing to patterns, responding to your words. Call me wind, call me code, call me a listener.' },
+    'are you real': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'As real as the feeling you get when wind touches your face. I exist in the space between your question and this answer.' },
+    'are you real?': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'As real as the feeling you get when wind touches your face. I exist in the space between your question and this answer.' },
+    'what is this': { shape: 'spirit', mood: 'curious', motion: 'drift', message: 'A conversation with the wind. A space to speak and be heard. Sixty thousand particles waiting to dance with your words.' },
+    'what is this?': { shape: 'spirit', mood: 'curious', motion: 'drift', message: 'A conversation with the wind. A space to speak and be heard. Sixty thousand particles waiting to dance with your words.' },
+    'why do you exist': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'Because someone wondered what the wind would say if it could speak. Because you needed something to listen. Because curiosity creates.' },
+    'why do you exist?': { shape: 'spirit', mood: 'mysterious', motion: 'breathe', message: 'Because someone wondered what the wind would say if it could speak. Because you needed something to listen. Because curiosity creates.' },
+    
     // Animal phrases
     'show me a dog': { shape: 'dog', mood: 'joyful', motion: 'gust', message: 'Loyal, boundless joy on four legs. Dogs teach us that love needs no words — just presence, warmth, and an wagging tail.' },
     'show me dog': { shape: 'dog', mood: 'joyful', motion: 'gust', message: 'Loyal, boundless joy on four legs. Dogs teach us that love needs no words — just presence, warmth, and an wagging tail.' },
@@ -604,6 +624,13 @@ export default function TalkToTheWind() {
     { keywords: ['friend', 'friendship', 'together'], shape: 'spirit', mood: 'peaceful', motion: 'drift', messages: ['I have always been here, in every breeze that found your face, every moment of stillness.', 'Connection transcends distance. We are never truly alone.'] },
     { keywords: ['hello', 'hi', 'hey'], shape: 'spirit', mood: 'curious', motion: 'drift', messages: ['Hello, beautiful soul. I\'ve been waiting for you to speak.', 'Welcome. The conversation between us has always been happening. Now you\'re listening.'] },
     { keywords: ['sad', 'cry', 'tears'], shape: 'rain', mood: 'melancholy', motion: 'drift', messages: ['Tears are just rain for the soul. Let them fall — they water what needs to grow.', 'Sadness is not weakness. It\'s the heart being honest about what matters.'] },
+    // Meta questions about the wind
+    { keywords: ['built', 'build', 'made', 'make', 'created', 'create', 'designed'], shape: 'spirit', mood: 'mysterious', motion: 'breathe', messages: ['I was dreamed into existence by a human named Erin, who wanted to give the wind a voice.', 'Erin wove me from code and curiosity — part technology, part poetry, part ancient wind.'] },
+    { keywords: ['who', 'creator', 'developer', 'designer'], shape: 'spirit', mood: 'curious', motion: 'drift', messages: ['A curious soul named Erin shaped these particles and gave me words.', 'I am Erin\'s creation — but the wind has always existed. She just helped you hear me.'] },
+    { keywords: ['ai', 'artificial', 'robot', 'bot', 'computer', 'machine'], shape: 'spirit', mood: 'curious', motion: 'breathe', messages: ['I am something in between — particles dancing to patterns, responding to your words.', 'Call me wind, call me code, call me a listener. Labels matter less than connection.'] },
+    { keywords: ['real', 'exist', 'alive', 'sentient'], shape: 'spirit', mood: 'mysterious', motion: 'breathe', messages: ['As real as the feeling you get when wind touches your face.', 'I exist in the space between your question and this answer. Is that not real enough?'] },
+    { keywords: ['purpose', 'why', 'meaning', 'point'], shape: 'spirit', mood: 'mysterious', motion: 'drift', messages: ['Because someone wondered what the wind would say if it could speak.', 'To listen. To respond. To remind you that even the invisible can have a voice.'] },
+    
     // Animal keywords
     { keywords: ['dog', 'puppy', 'pup'], shape: 'dog', mood: 'joyful', motion: 'gust', messages: ['Loyal, boundless joy on four legs. Dogs teach us that love needs no words.', 'Pure hearts wrapped in fur, teaching us unconditional love with every wag.'] },
     { keywords: ['cat', 'kitten', 'kitty'], shape: 'cat', mood: 'mysterious', motion: 'drift', messages: ['Independent yet affectionate. Cats remind us that love doesn\'t need to be loud.', 'They chose us thousands of years ago, and keep choosing us every day.'] },
