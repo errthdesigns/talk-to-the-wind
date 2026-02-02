@@ -104,10 +104,11 @@ const shapeGenerators = {
 
   wave: (count) => {
     const positions = [];
+    const yOffset = 30;
     for (let i = 0; i < count; i++) {
       const x = (Math.random() - 0.5) * 250;
       const z = (Math.random() - 0.5) * 150;
-      const y = Math.sin(x * 0.05) * 40 + Math.sin(z * 0.08) * 20 + (Math.random() - 0.5) * 15;
+      const y = Math.sin(x * 0.05) * 40 + Math.sin(z * 0.08) * 20 + (Math.random() - 0.5) * 15 + yOffset;
       positions.push([x, y, z]);
     }
     return positions;
@@ -115,12 +116,13 @@ const shapeGenerators = {
 
   mountain: (count) => {
     const positions = [];
+    const yOffset = 0; // Mountain starts from base
     for (let i = 0; i < count; i++) {
       const x = (Math.random() - 0.5) * 250;
       const z = (Math.random() - 0.5) * 250;
       const dist = Math.sqrt(x * x + z * z);
       const height = Math.max(0, 150 - dist * 0.8 + (Math.random() - 0.5) * 30);
-      positions.push([x, height - 80, z]);
+      positions.push([x, height - 50 + yOffset, z]);
     }
     return positions;
   },
@@ -128,13 +130,14 @@ const shapeGenerators = {
   galaxy: (count) => {
     const positions = [];
     const arms = 3;
+    const yOffset = 30;
     for (let i = 0; i < count; i++) {
       const arm = i % arms;
       const t = Math.random();
       const spiralAngle = (arm / arms) * Math.PI * 2 + t * Math.PI * 2;
       const r = t * 120 + Math.random() * 20;
       const spread = (1 - t) * 0.5 + 0.1;
-      positions.push([Math.cos(spiralAngle + (Math.random() - 0.5) * spread) * r, (Math.random() - 0.5) * 20 * (1 - t), Math.sin(spiralAngle + (Math.random() - 0.5) * spread) * r]);
+      positions.push([Math.cos(spiralAngle + (Math.random() - 0.5) * spread) * r, (Math.random() - 0.5) * 20 * (1 - t) + yOffset, Math.sin(spiralAngle + (Math.random() - 0.5) * spread) * r]);
     }
     return positions;
   },
@@ -194,8 +197,9 @@ const shapeGenerators = {
 
   rain: (count) => {
     const positions = [];
+    const yOffset = 30;
     for (let i = 0; i < count; i++) {
-      positions.push([(Math.random() - 0.5) * 200, Math.random() * 300 - 100, (Math.random() - 0.5) * 100]);
+      positions.push([(Math.random() - 0.5) * 200, Math.random() * 250 - 100 + yOffset, (Math.random() - 0.5) * 100]);
     }
     return positions;
   },
@@ -203,6 +207,7 @@ const shapeGenerators = {
   cloud: (count) => {
     const positions = [];
     const blobs = 5;
+    const yOffset = 30;
     for (let i = 0; i < count; i++) {
       const blob = Math.floor(Math.random() * blobs);
       const blobX = (blob - 2) * 40;
@@ -210,18 +215,19 @@ const shapeGenerators = {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = 30 + Math.random() * 15;
-      positions.push([blobX + r * Math.sin(phi) * Math.cos(theta), blobY + r * Math.sin(phi) * Math.sin(theta) * 0.6 + 50, r * Math.cos(phi)]);
+      positions.push([blobX + r * Math.sin(phi) * Math.cos(theta), blobY + r * Math.sin(phi) * Math.sin(theta) * 0.6 + yOffset, r * Math.cos(phi)]);
     }
     return positions;
   },
 
   scatter: (count) => {
     const positions = [];
+    const yOffset = 30;
     for (let i = 0; i < count; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const r = 50 + Math.random() * 150;
-      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi)]);
+      positions.push([r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta) + yOffset, r * Math.cos(phi)]);
     }
     return positions;
   },
